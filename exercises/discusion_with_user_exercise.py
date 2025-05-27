@@ -7,7 +7,7 @@ from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.ui import Console
 
 from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
-from autogen_agentchat.agents import AssistantAgent, UserProxyAgent
+from autogen_agentchat.agents import UserProxyAgent
 import os
 
 from dotenv import load_dotenv
@@ -37,4 +37,3 @@ team = RoundRobinGroupChat([assistant, user_proxy], termination_condition=termin
 # Run the conversation and stream to the console.
 stream = team.run_stream(task="Write a 4-line poem about the ocean.")
 asyncio.run(Console(stream))
-

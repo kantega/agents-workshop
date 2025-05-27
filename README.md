@@ -3,5 +3,6 @@ Materialer for Keiken
 
 ## TODO
 - requrements.txt
-- Code writting and exectution
+- Code writing and web browsing using managed discussion
 - Generate intro to autogen and agents
+- Imports

@@ -38,7 +38,7 @@ critic_agent = AssistantAgent(
 )
 
 # Define a termination condition that stops the task if the critic approves.
-#text_termination = TextMentionTermination("APPROVE")
+# text_termination = TextMentionTermination("APPROVE")
 termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10)
 
 # Create a team with the primary and critic agents.
@@ -48,11 +48,13 @@ team = RoundRobinGroupChat(
 )
 
 asyncio.run(team.reset())  # Reset the team for a new task.
-#result = asyncio.run(Console(team.run_stream(task="Write a short poem about the fall season.")) ) # Stream the messages to the console.
+# result = asyncio.run(Console(team.run_stream(task="Write a short poem about the fall season.")) ) # Stream the messages to the console.
 
 # TASK 1: SPØR OM Å LAGE KODEFORSLAG PÅ NOE, SOM F.EKS. FINN PI-NUMBER. Tips: muligens må du begrense antall rounds slik at diskusjon tar ikke evighet: termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10). See also: https://microsoft.github.io/autogen/dev//user-guide/agentchat-user-guide/tutorial/termination.html
 
 result = asyncio.run(
     Console(team.run_stream(task="Write simple code that calculates pi number"))
 )
-print(result.stop_reason) # Get to know if stopped due to APPROVE or because of max rounds
+print(
+    result.stop_reason
+)  # Get to know if stopped due to APPROVE or because of max rounds

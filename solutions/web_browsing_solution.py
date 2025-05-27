@@ -25,10 +25,11 @@ model_client = AzureOpenAIChatCompletionClient(
 #     """Find information on the web"""
 #     return "Kantega is an IT consultancy, with offices in Trondheim, Oslo and Bergen"
 
+
 # Ducky go go
 async def web_search_dgg(query: str) -> str:
     """Find information on the web Using Ducky Go Go.
-    This grabs the top result snippet for the user's query """
+    This grabs the top result snippet for the user's query"""
     with DDGS(verify=False) as ddgs:
         results = ddgs.text(query, max_results=3, safesearch="off")
         for result in results:

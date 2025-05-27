@@ -4,7 +4,6 @@ from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.conditions import TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.ui import Console
-from autogen_agentchat.conditions import MaxMessageTermination
 
 from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 import os
@@ -47,7 +46,8 @@ team = RoundRobinGroupChat(
 )
 
 asyncio.run(team.reset())  # Reset the team for a new task.
-result = asyncio.run(Console(team.run_stream(task="Write a short poem about the fall season.")) ) # Stream the messages to the console.
+result = asyncio.run(
+    Console(team.run_stream(task="Write a short poem about the fall season."))
+)  # Stream the messages to the console.
 
 # TASK 1: SPØR OM Å LAGE KODEFORSLAG PÅ NOE, SOM F.EKS. FINN PI-NUMBER. Tips: muligens må du begrense antall rounds slik at diskusjon tar ikke evighet: termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10). See also: https://microsoft.github.io/autogen/dev//user-guide/agentchat-user-guide/tutorial/termination.html
-

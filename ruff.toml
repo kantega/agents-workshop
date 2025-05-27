@@ -1,0 +1,11 @@
+[lint]
+select = ["E", "F", "I"]
+
+# isort configuration
+[lint.isort]
+known-first-party = ["autogen_ext", "autogen_agentchat"]
+known-third-party = ["pandas", "matplotlib", "numpy"]
+#default-section = "THIRDPARTY"
+combine-as-imports = true
+force-wrap-aliases = true
+force-single-line = true
