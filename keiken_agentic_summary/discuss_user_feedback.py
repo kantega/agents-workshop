@@ -24,7 +24,7 @@ model_client = AzureOpenAIChatCompletionClient(
 )
 
 
-with open("feedback.txt", "r") as file:
+with open("data/feedback.txt", "r") as file:
     doc = file.read()
 
 # Create the primary agent.
