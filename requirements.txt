@@ -1,0 +1,8 @@
+# Core dependencies for autogen exercises
+python-dotenv>=1.0.0
+autogen-agentchat>=0.2.0
+autogen-ext[openai]>=0.2.0
+
+# Additional dependencies that may be needed
+docker>=6.0.0
+asyncio-mqtt>=0.11.0

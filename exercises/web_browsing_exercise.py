@@ -1,12 +1,12 @@
 # EXERCISE: WRITE A REAL BROWSING TOOL OR USE INBUILT FUNCTION
 
 import asyncio
-from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 import os
-from autogen_agentchat.agents import AssistantAgent
-
 
 from dotenv import load_dotenv
+
+from autogen_agentchat.agents import AssistantAgent
+from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 
 load_dotenv()
 api_key = os.getenv("API_KEY")

@@ -1,16 +1,14 @@
 import asyncio
-
-from autogen_agentchat.agents import AssistantAgent
-
-from autogen_agentchat.conditions import TextMentionTermination
-from autogen_agentchat.teams import RoundRobinGroupChat
-from autogen_agentchat.ui import Console
-
-from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
-from autogen_agentchat.agents import UserProxyAgent
 import os
 
 from dotenv import load_dotenv
+
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.agents import UserProxyAgent
+from autogen_agentchat.conditions import TextMentionTermination
+from autogen_agentchat.teams import RoundRobinGroupChat
+from autogen_agentchat.ui import Console
+from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
