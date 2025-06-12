@@ -1,5 +1,5 @@
 # agents-workshop
-Materialer for Keiken
+Keiken workshop i Trondheim 20 juni 2025
 
 ## Om Agentiske Systemer
 
@@ -313,9 +313,29 @@ AutoGen har innebygde sikkerhetsfunksjoner:
 - Kombinerer AI-effektivitet med menneskelig ekspertise
 - Fleksibel kontroll over automatiseringsgrad
 
-## Øvelse rekkefølge
-For å få mest mulig ut av workshoppen, anbefales følgende rekkefølge for øvelsene:
-- web_browsing_exercise.py
-- discussion_exercise.py
-- discussion_with_user_exercise.py
-- code_gen_2_agents.py
+## 🎯 Øvelsesrekkefølge
+
+For å få mest mulig ut av workshoppen følger øvelsene en logisk progresjon fra enkle konsepter til mer avanserte multi-agent systemer. Anbefalt rekkefølge:
+
+### 1. 🌐 Web Browsing med Verktøy
+**Fil:** `web_browsing_exercise.py`  
+**Konsepter:** Agent tools, funksjonskall, enkelt agent-system  
+**Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i AutoGen.
+
+### 2. 💬 Agent-til-Agent Diskusjon  
+**Fil:** `discussion_exercise.py`  
+**Konsepter:** Multi-agent samtaler, RoundRobinGroupChat, termineringsvilkår  
+**Beskrivelse:** Opprett ditt første multi-agent system hvor to agenter (primary og critic) diskuterer og forbedrer løsninger sammen. Introduserer peer review-mønsteret.
+
+### 3. 👤 Interaktiv Diskusjon med Bruker
+**Fil:** `discussion_with_user_exercise.py`  
+**Konsepter:** UserProxyAgent, menneske-i-løkka, interaktive samtaler  
+**Beskrivelse:** Utvid agent-systemet til å inkludere menneskelig input. Lær hvordan du integrerer brukerinteraksjon i agent-arbeidsflyter.
+
+### 4. 🔧 Kodegenerering med Utførelse
+**Fil:** `code_gen_2_agents.py`  
+**Konsepter:** CodeExecutorAgent, Docker-isolasjon, kode-generering og testing  
+**Beskrivelse:** Avansert øvelse som kombinerer kodegenerering og -utførelse. En agent skriver kode, en annen kjører den i et sikkert Docker-miljø.
+
+---
+**💡 Tips:** Start med øvelse 1 og arbeid deg oppover. Hver øvelse bygger på konseptene fra de forrige!
