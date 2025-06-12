@@ -313,6 +313,9 @@ AutoGen har innebygde sikkerhetsfunksjoner:
 - Kombinerer AI-effektivitet med menneskelig ekspertise
 - Fleksibel kontroll over automatiseringsgrad
 
-## TODO
-- requrements.txt
-- Code writing and web browsing using managed discussion
+## Øvelse rekkefølge
+For å få mest mulig ut av workshoppen, anbefales følgende rekkefølge for øvelsene:
+- web_browsing_exercise.py
+- discussion_exercise.py
+- discussion_with_user_exercise.py
+- code_gen_2_agents.py
