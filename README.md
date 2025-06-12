@@ -131,10 +131,10 @@ AutoGen støtter forskjellige språkmodeller gjennom modellklienter:
 **Konfigurasjon:**
 ```python
 model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="gpt-4o",
-    model="gpt-4o",
-    api_version="2024-10-21",
-    azure_endpoint="https://kjzopenai.openai.azure.com/",
+    azure_deployment="model-deployment-name",
+    model="model-name",
+    api_version="api-version" #"2024-10-21",
+    azure_endpoint="https://your-azure-openai-endpoint.openai.azure.com/",
     api_key=api_key,
 )
 ```
@@ -166,6 +166,123 @@ AutoGen bruker asynkron programmering for effektiv håndtering:
 **Streaming:**
 - Sanntidsvisning av agent-samtaler
 - `Console` UI for å følge diskusjoner mens de pågår
+
+### Hvordan kjøre Agenter og Teams
+
+AutoGen tilbyr flere metoder for å kjøre agenter og teams, avhengig av om du vil ha sanntidsvisning eller bare resultatet:
+
+#### Kjøring av Enkeltlagenter
+
+**agent.run() - Enkel kjøring:**
+```python
+# Kjør en enkelt agent og få resultatet
+result = await agent.run(task="Write a Python function to calculate fibonacci numbers")
+print(result.messages[-1])  # Vis siste melding
+```
+
+**agent.run_stream() - Streaming kjøring:**
+```python
+# Kjør agent med sanntidsvisning
+stream = agent.run_stream(task="Explain quantum computing")
+await Console(stream)  # Vis meldinger mens de genereres
+```
+
+#### Kjøring av Teams
+
+**team.run() - Team kjøring:**
+```python
+# Kjør et team og få alle meldinger
+result = await team.run(task="Create a web application with HTML, CSS and JavaScript")
+for message in result.messages:
+    print(f"{message.source}: {message.content}")
+```
+
+**team.run_stream() - Team streaming:**
+```python
+# Kjør team med sanntidsvisning av diskusjonen
+stream = team.run_stream(task="Design a database schema for an e-commerce system")
+await Console(stream)  # Følg diskusjonen i sanntid
+```
+
+#### Praktiske Eksempler
+
+**Enkelt Agent-Team:**
+```python
+import asyncio
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.teams import RoundRobinGroupChat
+from autogen_agentchat.conditions import MaxMessageTermination
+from autogen_agentchat.ui import Console
+
+async def main():
+    # Opprett agenter
+    coder = AssistantAgent("coder", model_client=model_client)
+    reviewer = AssistantAgent("reviewer", model_client=model_client)
+    
+    # Opprett team
+    team = RoundRobinGroupChat(
+        participants=[coder, reviewer],
+        termination_condition=MaxMessageTermination(6)
+    )
+    
+    # Kjør oppgave
+    task = "Write and review a Python function to sort a list"
+    await Console(team.run_stream(task=task))
+
+# Kjør hovedfunksjonen
+asyncio.run(main())
+```
+
+**Med Menneskelig Interaksjon:**
+```python
+from autogen_agentchat.agents import UserProxyAgent
+
+async def interactive_session():
+    assistant = AssistantAgent("assistant", model_client=model_client)
+    user_proxy = UserProxyAgent("user", input_func=input)
+    
+    team = RoundRobinGroupChat(
+        [assistant, user_proxy],
+        termination_condition=TextMentionTermination("DONE")
+    )
+    
+    # Bruker kan delta i samtalen
+    await Console(team.run_stream(task="Help me plan a Python project"))
+
+asyncio.run(interactive_session())
+```
+
+#### Viktige Metoder og Konsepter
+
+**team.reset():**
+- Nullstiller teamets tilstand før ny oppgave
+- Viktig å kalle mellom forskjellige oppgaver
+
+```python
+await team.reset()  # Nullstill før ny oppgave
+result = await team.run(task="New task here")
+```
+
+**Håndtering av Resultater:**
+```python
+# Få tilgang til alle meldinger
+result = await team.run(task="Some task")
+for message in result.messages:
+    print(f"Fra {message.source}: {message.content}")
+
+# Få siste melding
+last_message = result.messages[-1]
+print(f"Siste svar: {last_message.content}")
+```
+
+**Feilhåndtering:**
+```python
+try:
+    result = await team.run(task="Complex task")
+    print("Oppgave fullført!")
+except Exception as e:
+    print(f"Feil under kjøring: {e}")
+```
 
 #### Sikkerhet og Isolasjon
 AutoGen har innebygde sikkerhetsfunksjoner:
@@ -199,5 +316,3 @@ AutoGen har innebygde sikkerhetsfunksjoner:
 ## TODO
 - requrements.txt
 - Code writing and web browsing using managed discussion
-- Generate intro to autogen and agents
-- Imports
