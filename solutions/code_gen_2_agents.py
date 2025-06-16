@@ -27,8 +27,8 @@ model_client = AzureOpenAIChatCompletionClient(
 
 # Improved termination condition - stops when task is completed
 termination_condition = (
-    TextMentionTermination("TASK_COMPLETED") |
-    MaxMessageTermination(30)  # Reasonable fallback
+    TextMentionTermination("TASK_COMPLETED")
+    | MaxMessageTermination(30)  # Reasonable fallback
 )
 
 work_dir = Path("coding")
@@ -42,9 +42,14 @@ async def main() -> None:
     await code_executor.start()
 
     code_executor_agent = CodeExecutorAgent(
-        "code_executor_agent", code_executor=code_executor, 
+        "code_executor_agent",
+        code_executor=code_executor,
     )
-    coder_agent = AssistantAgent("coder_agent", model_client=model_client, system_message="You are a helpful AI assistant. When you think the task has been successfully executed by a coder, write 'TASK_COMPLETED' in your answer. Do not write it before the task is completed. If you are not sure, ask the coder to check the results.")
+    coder_agent = AssistantAgent(
+        "coder_agent",
+        model_client=model_client,
+        system_message="You are a helpful AI assistant. When you think the task has been successfully executed by a coder, write 'TASK_COMPLETED' in your answer. Do not write it before the task is completed. If you are not sure, ask the coder to check the results.",
+    )
 
     groupchat = RoundRobinGroupChat(
         participants=[coder_agent, code_executor_agent],
@@ -53,17 +58,12 @@ async def main() -> None:
 
     task = "Visualize survival rates of Titanic passengers by class. Write visualization a file. Data is in titanic.csv."
     result = await Console(groupchat.run_stream(task=task))
-    
-    # Print why the execution stopped
+
     print(f"Execution stopped due to: {result.stop_reason}")
 
-    # stop the execution container
     await code_executor.stop()
 
+# Start Docker: sudo systemctl start docker
 # TIPS Put a local file to root/coding dir
 
 asyncio.run(main())
-
-# TASK: Analyse some local data, e.g. csv files in the working directory.
-# TASK: Create a plot of NVIDA vs TSLA stock returns YTD from 2025-01-01.
-# TASK (Optional): Include web browsing capabilities.
