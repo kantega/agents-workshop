@@ -25,7 +25,7 @@ model_client = AzureOpenAIChatCompletionClient(
     api_key=api_key,
 )
 
-termination_condition = MaxMessageTermination(3)
+termination_condition = MaxMessageTermination(10)
 work_dir = Path("coding")
 
 

@@ -36,7 +36,7 @@ agent = AssistantAgent(
 
 result = asyncio.run(
     agent.run(
-        task="Make a summary about Kristoffer Jan Zieba who lives in Trondheim, Norway"
+        task="Make a summary about Kantega AS, a company located in Trondheim, Norway"
     )
 )
 print("\nAGENT'S ANSWER:\n", result.messages[-1].content)
