@@ -1,5 +1,6 @@
 data/
 kb/
 scripts/
-coding/
+coding/*
+!coding/titanic.csv
 .env

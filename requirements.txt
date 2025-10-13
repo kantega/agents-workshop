@@ -1,8 +1,11 @@
-# Core dependencies for autogen exercises
+# Core dependencies for autogen exercises and examples
 python-dotenv>=1.0.0
-autogen-agentchat>=0.2.0
-autogen-ext[openai]>=0.2.0
+autogen-agentchat==0.7.5
+autogen-ext[openai]==0.7.5
+duckduckgo-search==8.1.1
+docker>=7.0.0
+autogen-ext[docker]==0.7.5
+#asyncio-mqtt>=0.11.0
 
-# Additional dependencies that may be needed
-docker>=6.0.0
-asyncio-mqtt>=0.11.0
+# Code linting and formatting tools
+ruff

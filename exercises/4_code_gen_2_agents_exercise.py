@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.agents import CodeExecutorAgent
-from autogen_agentchat.conditions import MaxMessageTermination, TextMentionTermination
+from autogen_agentchat.conditions import MaxMessageTermination
+from autogen_agentchat.conditions import TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.ui import Console
 from autogen_ext.code_executors.docker import DockerCommandLineCodeExecutor
@@ -25,12 +26,7 @@ model_client = AzureOpenAIChatCompletionClient(
     api_key=api_key,
 )
 
-# Improved termination condition - stops when task is completed
-termination_condition = (
-    TextMentionTermination("TASK_COMPLETED")
-    | MaxMessageTermination(30)  # Reasonable fallback
-)
-
+termination_condition = TextMentionTermination("TASK_COMPLETED") | MaxMessageTermination(6)
 work_dir = Path("coding")
 
 
@@ -42,28 +38,26 @@ async def main() -> None:
     await code_executor.start()
 
     code_executor_agent = CodeExecutorAgent(
-        "code_executor_agent",
-        code_executor=code_executor,
+        "code_executor_agent", code_executor=code_executor
     )
-    coder_agent = AssistantAgent(
-        "coder_agent",
-        model_client=model_client,
-        system_message="You are a helpful AI assistant. When you think the task has been successfully executed by a coder, write 'TASK_COMPLETED' in your answer. Do not write it before the task is completed. If you are not sure, ask the coder to check the results.",
-    )
+    coder_agent = AssistantAgent("coder_agent", model_client=model_client, system_message="Respond with 'TASK_COMPLETED' to when you see the code has been executed and the task is complete.")
 
     groupchat = RoundRobinGroupChat(
         participants=[coder_agent, code_executor_agent],
         termination_condition=termination_condition,
     )
 
-    task = "Visualize survival rates of Titanic passengers by class. Write visualization a file. Data is in titanic.csv."
-    result = await Console(groupchat.run_stream(task=task))
+    task = "Write Python code to calculate pi-number"
+    await Console(groupchat.run_stream(task=task))
 
-    print(f"Execution stopped due to: {result.stop_reason}")
-
+    # stop the execution container
     await code_executor.stop()
 
-# Start Docker: sudo systemctl start docker
-# TIPS Put a local file to root/coding dir
 
 asyncio.run(main())
+
+# EXERCISE: ask agents to solve a more complex coding task that involves several rounds of code generation and execution and some external libraries. You may want to scrape websites for data. Example tasks:
+# - analyse some local data, e.g. csv files in the working directory.
+# - create a plot of NVIDA vs TSLA stock returns ytd from 2025-01-01.
+# - create a small web app using e.g. Flask or FastAPI.
+

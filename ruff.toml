@@ -1,5 +1,6 @@
 [lint]
 select = ["E", "F", "I"]
+ignore = ["E501"]
 
 # isort configuration
 [lint.isort]

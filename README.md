@@ -1,5 +1,14 @@
 # agents-workshop
-Keiken workshop i Trondheim 20 juni 2025
+Intro til Agentiske Systemer med AutoGen
+
+## Installasjon
+Lag et virtuelt miljø og installer avhengigheter. Bruk helst Python 3.13. For eksempel med bruk av `conda`:
+
+```bash
+conda create -n agents-workshop python=3.13
+conda activate agents-workshop
+pip install -r requirements.txt
+```
 
 ## Om Agentiske Systemer
 
