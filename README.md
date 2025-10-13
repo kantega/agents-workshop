@@ -10,6 +10,10 @@ conda activate agents-workshop
 pip install -r requirements.txt
 ```
 
+Installer Docker med å følge instruksjonene på [docker.com](https://docs.docker.com/get-docker/).
+
+Sørg for at Docker-tjenesten kjører, f.eks. med `sudo systemctl start docker`.
+
 ## Om Agentiske Systemer
 
 ### Hva er agentiske systemer?
