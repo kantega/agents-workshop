@@ -17,6 +17,7 @@ pip install -r requirements.txt
 ```# .env
 API_KEY="din_api_nøkkel_her"
 ```
+- **Test at alt fungerer ved å kjøre `python test_environment.py`. Dette skriptet sjekker at alle nødvendige pakker er installert og at Docker fungerer som forventet.**
 
 ## Om Agentiske Systemer
 
