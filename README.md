@@ -1,18 +1,22 @@
 # agents-workshop
-Intro til Agentiske Systemer med AutoGen
+Intro workshop til agentiske systemer med AutoGen
 
-## Installasjon
-Lag et virtuelt miljø og installer avhengigheter. Bruk helst Python 3.13. For eksempel med bruk av `conda`:
+## Forutsetninger
+Før du kommer på workshop, sørg for at du har følgende på plass:
+- Har virtuelt miljø management system som `venv` eller `conda` som kan lage et Python 3.13 miljø som er anbefalt.
+- Har Docker installert. Om ikke, installer Docker med å følge instruksjonene på [docker.com](https://docs.docker.com/get-docker/). Sørg for at Docker-tjenesten kjører, f.eks. på Linux: `sudo systemctl start docker`.
+- Installer nødvendige Python-pakker fra `requirements.txt` i ditt miljø. For eksempel med bruk av `conda`:
 
 ```bash
 conda create -n agents-workshop python=3.13
 conda activate agents-workshop
 pip install -r requirements.txt
 ```
+- Du skal få en API-nøkkel til Azure OpenAI-tjenesten fra oss på worshoppen. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
 
-Installer Docker med å følge instruksjonene på [docker.com](https://docs.docker.com/get-docker/).
-
-Sørg for at Docker-tjenesten kjører, f.eks. med `sudo systemctl start docker`.
+```# .env
+API_KEY="din_api_nøkkel_her"
+```
 
 ## Om Agentiske Systemer
 

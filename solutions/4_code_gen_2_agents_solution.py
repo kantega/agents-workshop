@@ -27,10 +27,9 @@ model_client = AzureOpenAIChatCompletionClient(
 )
 
 # Improved termination condition - stops when task is completed or max 30 messages
-termination_condition = (
-    TextMentionTermination("TASK_COMPLETED")
-    | MaxMessageTermination(30)
-)
+termination_condition = TextMentionTermination(
+    "TASK_COMPLETED"
+) | MaxMessageTermination(30)
 
 work_dir = Path("coding")
 

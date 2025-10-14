@@ -26,7 +26,9 @@ model_client = AzureOpenAIChatCompletionClient(
     api_key=api_key,
 )
 
-termination_condition = TextMentionTermination("TASK_COMPLETED") | MaxMessageTermination(6)
+termination_condition = TextMentionTermination(
+    "TASK_COMPLETED"
+) | MaxMessageTermination(6)
 work_dir = Path("coding")
 
 
@@ -40,7 +42,11 @@ async def main() -> None:
     code_executor_agent = CodeExecutorAgent(
         "code_executor_agent", code_executor=code_executor
     )
-    coder_agent = AssistantAgent("coder_agent", model_client=model_client, system_message="Respond with 'TASK_COMPLETED' to when you see the code has been executed and the task is complete.")
+    coder_agent = AssistantAgent(
+        "coder_agent",
+        model_client=model_client,
+        system_message="Respond with 'TASK_COMPLETED' to when you see the code has been executed and the task is complete.",
+    )
 
     groupchat = RoundRobinGroupChat(
         participants=[coder_agent, code_executor_agent],
@@ -60,4 +66,3 @@ asyncio.run(main())
 # - analyse some local data, e.g. csv files in the working directory.
 # - create a plot of NVIDA vs TSLA stock returns ytd from 2025-01-01.
 # - create a small web app using e.g. Flask or FastAPI.
-
