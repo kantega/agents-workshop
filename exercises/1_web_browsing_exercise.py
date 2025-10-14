@@ -1,5 +1,3 @@
-# EXERCISE: WRITE A REAL BROWSING TOOL OR USE INBUILT FUNCTION. SEARCH FOR YOURSELF
-
 import asyncio
 import os
 
@@ -36,3 +34,6 @@ agent = AssistantAgent(
 
 result = asyncio.run(agent.run(task="Find information about Kantega"))
 print(result.messages[-1])
+
+# EXERCISE: write a real browsing tool to search for your name, company, or something else interesting.
+# Hint: you may use DuckDuckGo API that is free to use.

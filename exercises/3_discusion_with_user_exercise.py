@@ -35,3 +35,5 @@ team = RoundRobinGroupChat([assistant, user_proxy], termination_condition=termin
 # Run the conversation and stream to the console.
 stream = team.run_stream(task="Write a 4-line poem about the ocean.")
 asyncio.run(Console(stream))
+
+# EXERCISE: No exercise, just play around with the conversation. Try to get the assistant to write a poem you like and then approve it.

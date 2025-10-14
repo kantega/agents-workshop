@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.conditions import MaxMessageTermination
 from autogen_agentchat.conditions import TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.ui import Console
@@ -20,7 +21,6 @@ model_client = AzureOpenAIChatCompletionClient(
     api_key=api_key,
 )
 
-
 # Create the primary agent.
 primary_agent = AssistantAgent(
     "primary",
@@ -35,18 +35,17 @@ critic_agent = AssistantAgent(
     system_message="Provide constructive feedback. Respond with 'APPROVE' to when your feedbacks are addressed.",
 )
 
-# Define a termination condition that stops the task if the critic approves.
-text_termination = TextMentionTermination("APPROVE")
+termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10)
 
 # Create a team with the primary and critic agents.
 team = RoundRobinGroupChat(
     [primary_agent, critic_agent],
-    termination_condition=text_termination,
+    termination_condition=termination,
 )
 
-asyncio.run(team.reset())  # Reset the team for a new task.
-result = asyncio.run(
-    Console(team.run_stream(task="Write a short poem about the fall season."))
-)  # Stream the messages to the console.
+asyncio.run(team.reset())
 
-# TASK 1: SPØR OM Å LAGE KODEFORSLAG PÅ NOE, SOM F.EKS. FINN PI-NUMBER. Tips: muligens må du begrense antall rounds slik at diskusjon tar ikke evighet: termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10). See also: https://microsoft.github.io/autogen/dev//user-guide/agentchat-user-guide/tutorial/termination.html
+result = asyncio.run(
+    Console(team.run_stream(task="Write simple code that calculates pi number"))
+)
+print(result.stop_reason)

@@ -1,10 +1,11 @@
 import asyncio
-from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 import os
-from autogen_agentchat.agents import AssistantAgent
-from duckduckgo_search import DDGS
 
 from dotenv import load_dotenv
+from duckduckgo_search import DDGS
+
+from autogen_agentchat.agents import AssistantAgent
+from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
