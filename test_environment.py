@@ -13,7 +13,9 @@ def test_python_version():
         print(f"✓ Python {sys.version_info.major}.{sys.version_info.minor}")
         return True
     else:
-        print(f"✗ Python {sys.version_info.major}.{sys.version_info.minor} (requires 3.13+)")
+        print(
+            f"✗ Python {sys.version_info.major}.{sys.version_info.minor} (requires 3.13+)"
+        )
         return False
 
 
@@ -40,11 +42,17 @@ def test_imports():
                     print(f"✗ version {version} (requires {required_version})")
                     all_imports_ok = False
                 else:
-                    print(f"⚠ installed but version unknown (requires {required_version})")
+                    print(
+                        f"⚠ installed but version unknown (requires {required_version})"
+                    )
             else:
                 print("✓")
         except ImportError:
-            print(f"✗ (install with: pip install {package_name}=={required_version})" if required_version else f"✗ (install with: pip install {package_name})")
+            print(
+                f"✗ (install with: pip install {package_name}=={required_version})"
+                if required_version
+                else f"✗ (install with: pip install {package_name})"
+            )
             all_imports_ok = False
 
     return all_imports_ok
@@ -57,10 +65,7 @@ def test_docker():
     print("Checking Docker...", end=" ")
     try:
         result = subprocess.run(
-            ["docker", "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5
+            ["docker", "--version"], capture_output=True, text=True, timeout=5
         )
         if result.returncode == 0:
             version = result.stdout.strip()
@@ -84,10 +89,7 @@ def test_docker_running():
     print("Checking Docker daemon...", end=" ")
     try:
         result = subprocess.run(
-            ["docker", "ps"],
-            capture_output=True,
-            text=True,
-            timeout=5
+            ["docker", "ps"], capture_output=True, text=True, timeout=5
         )
         if result.returncode == 0:
             print("✓ Docker daemon is running")
@@ -162,8 +164,12 @@ def main():
         print("\n✓ All tests passed! You're ready to run the exercise.")
         return 0
     else:
-        print("\n✗ Some tests failed. Please fix the issues above before running the exercise.")
-        print("\nNote: API key is not tested here. Make sure to set API_KEY in .env file.")
+        print(
+            "\n✗ Some tests failed. Please fix the issues above before running the exercise."
+        )
+        print(
+            "\nNote: API key is not tested here. Make sure to set API_KEY in .env file."
+        )
         return 1
 
 

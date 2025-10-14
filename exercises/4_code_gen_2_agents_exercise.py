@@ -17,10 +17,8 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 model_client = AzureOpenAIChatCompletionClient(
-    # azure_deployment="gpt-4.1-nano", # Nano is quite bad for this task
-    # model="gpt-4.1-nano",
-    azure_deployment="gpt-4o",
-    model="gpt-4o",
+    azure_deployment="gpt-4.1-nano",
+    model="gpt-4.1-nano",
     api_version="2024-10-21",
     azure_endpoint="https://kjzopenai.openai.azure.com/",
     api_key=api_key,
@@ -45,7 +43,7 @@ async def main() -> None:
     coder_agent = AssistantAgent(
         "coder_agent",
         model_client=model_client,
-        system_message="Respond with 'TASK_COMPLETED' to when you see the code has been executed and the task is complete.",
+        system_message="""You are a helpful AI assistant that writes Python code. Your code will be executed by a code-executor agent. When you think the task has been successfully executed, write 'TASK_COMPLETED' in your answer. Do not write it before the code has been run and task is completed.""",
     )
 
     groupchat = RoundRobinGroupChat(
@@ -53,7 +51,7 @@ async def main() -> None:
         termination_condition=termination_condition,
     )
 
-    task = "Write Python code to calculate pi-number"
+    task = "Write simple code to calculate pi-number"
     await Console(groupchat.run_stream(task=task))
 
     # stop the execution container

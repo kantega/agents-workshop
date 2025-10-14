@@ -17,10 +17,8 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 model_client = AzureOpenAIChatCompletionClient(
-    # azure_deployment="gpt-4.1-nano", # Nano is quite bad for this task
-    # model="gpt-4.1-nano",
-    azure_deployment="gpt-4o",
-    model="gpt-4o",
+    azure_deployment="gpt-4.1-nano",
+    model="gpt-4.1-nano",
     api_version="2024-10-21",
     azure_endpoint="https://kjzopenai.openai.azure.com/",
     api_key=api_key,
@@ -48,7 +46,18 @@ async def main() -> None:
     coder_agent = AssistantAgent(
         "coder_agent",
         model_client=model_client,
-        system_message="You are a helpful AI assistant. When you think the task has been successfully executed by a coder, write 'TASK_COMPLETED' in your answer. Do not write it before the task is completed. If you are not sure, ask the coder to check the results.",
+        system_message="""You are a helpful AI assistant that writes Python and shell code that are necessary to complete a task. You may need to install additional libraries or tools to execute your code. You are not able to execute code yourselves. The code will be executed by a code-executor agent after you send it. This is why you ALWAYS MUST provide code in markdown-encoded code blocks as a part of your answer, for example:
+
+        ```python
+        print("Hello world")
+        ```
+        or
+
+        ```sh
+        pip install numpy
+        ```
+
+        When you are certain the task has been successfully executed, write only 'TASK_COMPLETED' in your answer. Do not write it before the code has been run and task is completed.""",
     )
 
     groupchat = RoundRobinGroupChat(
