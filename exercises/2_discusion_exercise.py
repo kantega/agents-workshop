@@ -32,7 +32,7 @@ primary_agent = AssistantAgent(
 critic_agent = AssistantAgent(
     "critic",
     model_client=model_client,
-    system_message="Provide constructive feedback. Respond with 'APPROVE' to when your feedbacks are addressed.",
+    system_message="Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed.",
 )
 
 # Define a termination condition that stops the task if the critic approves.
@@ -49,6 +49,6 @@ result = asyncio.run(
     Console(team.run_stream(task="Write a short poem about the fall season."))
 )  # Stream the messages to the console.
 
-# EXERCISE: ask the agent to create a code suggestion for something, e.g. find the pi-number.
+# EXERCISE: ask the agent to write code that calculates the pi number
 # Hint: you may need to limit the number of rounds so the discussion doesn't take forever: termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10).
 # See also: https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/termination.html

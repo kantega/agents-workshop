@@ -61,6 +61,6 @@ async def main() -> None:
 asyncio.run(main())
 
 # EXERCISE: ask agents to solve a more complex coding task that involves several rounds of code generation and execution and some external libraries. You may want to scrape websites for data. Example tasks:
-# - analyse some local data, e.g. csv files in the working directory.
-# - create a plot of NVIDA vs TSLA stock returns ytd from 2025-01-01.
+# - analyse some local data, e.g. 'Titanic dataset' csv file in /coding directory.
+# - create a plot of NVIDIA vs TSLA stock returns ytd from 2025-01-01.
 # - create a small web app using e.g. Flask or FastAPI.
