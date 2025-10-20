@@ -32,7 +32,7 @@ primary_agent = AssistantAgent(
 critic_agent = AssistantAgent(
     "critic",
     model_client=model_client,
-    system_message="Provide constructive feedback. Respond with 'APPROVE' to when your feedbacks are addressed.",
+    system_message="Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. Do not be too strict.",  # Adjusted prompt
 )
 
 termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10)
