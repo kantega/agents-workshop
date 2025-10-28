@@ -99,6 +99,9 @@ AutoGen er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer
 - Innebygd støtte for kodeeksekverering og verktøybruk
 - Fleksibel arkitektur som kan tilpasses mange bruksområder
 
+Oppdatering oktober 2025:
+AutoGen skal ikke utvikles videre (kun bugfix), siden Microsoft har lansert en ny plattform [Microsoft Agent Framework]("https://github.com/microsoft/agent-framework") som bygger videre på konseptene fra AutoGen og Semantic Kernel.
+
 ### AutoGen Grunnleggende Konsepter
 
 For å forstå hvordan AutoGen fungerer, er det viktig å kjenne til de grunnleggende byggesteinene:
