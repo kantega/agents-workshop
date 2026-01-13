@@ -163,7 +163,7 @@ AutoGen støtter forskjellige språkmodeller gjennom modellklienter:
 model_client = AzureOpenAIChatCompletionClient(
     azure_deployment="model-deployment-name",
     model="model-name",
-    api_version="api-version" #"2024-10-21",
+    api_version="api-version" #"2025-01-01-preview",
     azure_endpoint="https://your-azure-openai-endpoint.openai.azure.com/",
     api_key=api_key,
 )

@@ -1,6 +1,7 @@
 import asyncio
 import os
 
+from ddgs import DDGS
 from dotenv import load_dotenv
 
 from autogen_agentchat.agents import AssistantAgent
@@ -10,13 +11,12 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="gpt-4.1-nano",
-    model="gpt-4.1-nano",
-    api_version="2024-10-21",
-    azure_endpoint="https://kjzopenai.openai.azure.com/",
-    api_key=api_key,
+    azure_deployment="gpt-5-nano",
+    model="gpt-5-nano",
+    api_version="2025-01-01-preview",
+    azure_endpoint="https://agentsbcd.openai.azure.com/",
+    api_key=api_key, # type: ignore
 )
-
 
 # Define a tool that searches the web for information.
 # For simplicity, we will use a mock function here that returns a static string.
@@ -24,11 +24,18 @@ async def web_search(query: str) -> str:
     """Find information on the web"""
     return "Kantega is an IT consultancy, with offices in Trondheim, Oslo and Bergen"
 
+async def web_search_dgg(query: str) -> str:
+    with DDGS(verify=False) as ddgs:
+        results = ddgs.text(query, max_results=3, safesearch="off")
+        all_results = []
+        for result in results:
+            all_results.append(result["body"])
+        return "\n\n".join(all_results)  # Combine all results
 
 agent = AssistantAgent(
     name="assistant",
     model_client=model_client,
-    tools=[web_search],
+    tools=[web_search_dgg],
     system_message="Use tools to solve tasks.",
 )
 

@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.conditions import MaxMessageTermination
 from autogen_agentchat.conditions import TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.ui import Console
@@ -13,11 +14,11 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="gpt-4.1-nano",
-    model="gpt-4.1-nano",
-    api_version="2024-10-21",
-    azure_endpoint="https://kjzopenai.openai.azure.com/",
-    api_key=api_key,
+    azure_deployment="gpt-5-nano",
+    model="gpt-5-nano",
+    api_version="2025-01-01-preview",
+    azure_endpoint="https://agentsbcd.openai.azure.com/",
+    api_key=api_key, # type: ignore
 )
 
 
@@ -36,7 +37,7 @@ critic_agent = AssistantAgent(
 )
 
 # Define a termination condition that stops the task if the critic approves.
-text_termination = TextMentionTermination("APPROVE")
+text_termination = TextMentionTermination("APPROVE") | MaxMessageTermination(max_messages=10)
 
 # Create a team with the primary and critic agents.
 team = RoundRobinGroupChat(

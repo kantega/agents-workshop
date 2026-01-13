@@ -17,11 +17,11 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="gpt-4.1-nano",
-    model="gpt-4.1-nano",
-    api_version="2024-10-21",
-    azure_endpoint="https://kjzopenai.openai.azure.com/",
-    api_key=api_key,
+    azure_deployment="gpt-5-nano",
+    model="gpt-5-nano",
+    api_version="2025-01-01-preview",
+    azure_endpoint="https://agentsbcd.openai.azure.com/",
+    api_key=api_key, # type: ignore
 )
 
 termination_condition = TextMentionTermination(
