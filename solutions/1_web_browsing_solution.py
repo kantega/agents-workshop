@@ -11,7 +11,6 @@ async def web_search_dgg(query: str) -> str:
         results = ddgs.text(query, max_results=3, safesearch="off", )
         all_results = []
         for result in results:
-            print(f"{result["body"]}")
             all_results.append(result["body"])
         return "\n\n".join(all_results)  # Combine all results
 

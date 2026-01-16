@@ -8,7 +8,6 @@ from azure.identity import AzureCliCredential
 # For simplicity, we will use a mock function here that returns a static string.
 async def web_search(query: str, **kwargs) -> str:
     """Find information on the web"""
-    print(f"[tool] web_search called with query={query!r}")
     return "Kantega is an IT consultancy, with offices in Trondheim, Oslo and Bergen"
 
 async def search(query: str) -> None:
