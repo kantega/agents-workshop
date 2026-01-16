@@ -8,7 +8,6 @@ from ddgs import DDGS
 # Define a tool that searches the web for information.
 async def web_search_dgg(query: str) -> str:
     with DDGS(verify=False) as ddgs:
-        print(f"{query}")
         results = ddgs.text(query, max_results=3, safesearch="off", )
         all_results = []
         for result in results:
@@ -26,7 +25,7 @@ async def search(query: str) -> None:
         print(f"Agent: {result}\n")
 
 async def main() -> None:
-    await search("Make a summary about Kantega AS, a company located in Trondheim, Norway")
+    await search("Make a summary about Kantega AS, a company located in Trondheim, Norway. Keep it in english. ")
 
 if __name__ == "__main__":
     asyncio.run(main())
