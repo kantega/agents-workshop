@@ -15,7 +15,7 @@ async def web_search_dgg(query: str) -> str:
         return "\n\n".join(all_results)  # Combine all results
 
 async def search(query: str) -> None:
-    async with AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    async with AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="Make a clear an easy to read answer to the user query. Use tools to solve tasks.",
         tools=[web_search_dgg],
     ) as agent:

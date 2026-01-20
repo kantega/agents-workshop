@@ -1,0 +1,55 @@
+import asyncio
+import sys
+from pathlib import Path
+
+from agent_framework import ChatAgent
+from agent_framework import GroupChatBuilder
+from agent_framework import GroupChatState
+from agent_framework import Workflow
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from streaming_output import stream
+
+chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+
+# Create the coding agent.
+primary = ChatAgent(
+    name="Coder",
+    instructions="You are a helpful AI assistant that keeps it short.",
+    chat_client=chat_client,
+)
+
+# Create the critic agent.
+
+# Create the discussion selection algorithm.
+def round_robin_selector(state: GroupChatState) -> str:
+    """A round-robin selector function that picks the next speaker based on the current round index."""
+    participant_names = list(state.participants.keys())
+    selected = participant_names[state.current_round % len(participant_names)]
+    print(f"\n\nRound {state.current_round}: Selected speaker: {selected}\n")
+    return selected
+
+# Create a team with the primary and critic agents.
+team = (
+    GroupChatBuilder()
+    .with_select_speaker_func(round_robin_selector)
+    .participants([primary])
+    .with_termination_condition(lambda conversation: len(conversation) >= 4)
+    .build()
+)
+
+async def main_stream(task: str, workflow: Workflow) -> None:
+    await stream(task, workflow)
+
+task = "What is the answer to everything?"
+
+if __name__ == "__main__":
+    print("Starting team discussion...")
+    asyncio.run(main_stream(task, team))
+
+# EXERCISES:
+# a) Ask the agents to solve the task: Write code that calculates the pi number.
+# b) Give the Coder space: remove the limitation of keeping it short.
+# c) Create a critic agent to add to the discussion.
