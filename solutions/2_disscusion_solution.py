@@ -55,6 +55,7 @@ if __name__ == "__main__":
     asyncio.run(main_stream(task, team))
 
 # EXERCISES:
-# a) Ask the agents to solve the task: Write code that calculates the pi number.
+# a) Ask the team to solve the task: "Write code that calculates the pi number."
 # b) Give the Coder space: remove the limitation of keeping it short.
-# c) Create a critic agent to add to the discussion.
+# c) Create a "critic" agent and add it to the discussion. The critic should:
+#   "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. Do not be too strict.""
