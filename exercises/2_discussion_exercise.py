@@ -51,6 +51,6 @@ if __name__ == "__main__":
 
 # EXERCISES:
 # a) Ask the team to solve the task: "Write code that calculates the pi number."
-# b) Give the Coder space: remove the limitation of keeping it short.
+# b) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
 # c) Create a "critic" agent and add it to the discussion. The critic should:
 #   "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. Do not be too strict.""
