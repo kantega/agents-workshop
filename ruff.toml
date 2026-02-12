@@ -4,7 +4,6 @@ ignore = ["E501"]
 
 # isort configuration
 [lint.isort]
-known-first-party = ["autogen_ext", "autogen_agentchat"]
 known-third-party = ["pandas", "matplotlib", "numpy"]
 #default-section = "THIRDPARTY"
 combine-as-imports = true
