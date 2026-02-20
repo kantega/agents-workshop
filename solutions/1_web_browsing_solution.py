@@ -1,11 +1,13 @@
 import asyncio
 
+from agent_framework import tool
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 
 # Define a tool that searches the web for information.
+@tool(approval_mode="never_require")
 async def web_search_dgg(query: str) -> str:
     with DDGS(verify=False) as ddgs:
         results = ddgs.text(query, max_results=3, safesearch="off", )
@@ -16,7 +18,7 @@ async def web_search_dgg(query: str) -> str:
 
 async def search(query: str) -> None:
     async with AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
-        instructions="Make a clear an easy to read answer to the user query. Use tools to solve tasks.",
+        instructions="Make a clear and easy to read answer to the user query. Use tools to solve tasks. Only perform a web search once, using a single well-formed query. Do not search multiple times.",
         tools=[web_search_dgg],
     ) as agent:
         print(f"User: {query}")

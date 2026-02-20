@@ -10,7 +10,8 @@ async def stream(task: str, workflow: Workflow) -> None:
 
     last_executor_id: str | None = None
     output_event: WorkflowOutputEvent | None = None
-    async for event in workflow.run_stream(task):
+    result = await workflow.run(task, streaming=True)
+    async for event in result:
         if isinstance(event, AgentRunUpdateEvent):
             eid = event.executor_id
             if eid != last_executor_id:

@@ -2,46 +2,56 @@ import asyncio
 import sys
 from pathlib import Path
 
-from agent_framework import ChatAgent
-from agent_framework import GroupChatBuilder
-from agent_framework import GroupChatState
 from agent_framework import Workflow
 from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.orchestrations import GroupChatBuilder
 from azure.identity import AzureCliCredential
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from streaming_output import stream
+from process_event_stream import process_event_stream
 
+rounds_of_discussion = 2
 chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 
 # Create the coding agent.
-primary = ChatAgent(
+primary = chat_client.as_agent(
     name="Coder",
-    instructions="You are a helpful AI assistant that keeps it short.",
+    instructions="You are a helpful AI assistant that keeps it somewhat short.",
     chat_client=chat_client,
 )
 
-# Create the critic agent.
+# Create the orchestrator coordinating the discussion
+orchestrator = chat_client.as_agent(
+    name="orchestrator",
+    instructions=(
+        "You are a discussion manager coordinating a team conversation between participants. "
+        "Your job is to select who speaks next.\n\n"
+        "RULES:\n"
+        "1. Rotate through ALL participants - do not favor any single participant\n"
+        "2. Each participant should speak at least once before any participant speaks twice\n"
+        "3. Continue for at least {rounds_of_discussion} rounds before ending the discussion\n"
+        "4. Do NOT select the same participant twice in a row"
+    ),
+)
 
-# Create the discussion selection algorithm.
-def round_robin_selector(state: GroupChatState) -> str:
-    """A round-robin selector function that picks the next speaker based on the current round index."""
-    participant_names = list(state.participants.keys())
-    selected = participant_names[state.current_round % len(participant_names)]
-    print(f"\n\nRound {state.current_round}: Selected speaker: {selected}\n")
-    return selected
-
-# Create a team with the primary and critic agents.
 team = (
-    GroupChatBuilder()
-    .with_select_speaker_func(round_robin_selector)
-    .participants([primary])
-    .with_termination_condition(lambda conversation: len(conversation) >= 4)
+    GroupChatBuilder(
+        participants=[primary],
+        max_rounds=rounds_of_discussion,
+        orchestrator_agent=orchestrator,
+    )
+    # .with_request_info()  # Only pause before primary speaks
     .build()
 )
 
 async def main_stream(task: str, workflow: Workflow) -> None:
-    await stream(task, workflow)
+     stream = workflow.run(task, stream=True)
+     pending_responses = await process_event_stream(stream)
+     while pending_responses is not None:
+        # Run the workflow until there is no more human feedback to provide,
+        # in which case this workflow completes.
+        stream = workflow.run(stream=True, responses=pending_responses)
+        pending_responses = await process_event_stream(stream)
 
 task = "What is the answer to everything?"
 
