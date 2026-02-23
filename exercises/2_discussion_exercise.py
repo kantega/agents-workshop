@@ -16,7 +16,7 @@ chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 # Create the coding agent.
 primary = chat_client.as_agent(
     name="Coder",
-    instructions="You are a helpful AI assistant that keeps it somewhat short.",
+    instructions="You are a helpful AI assistant that keeps it short.",
     chat_client=chat_client,
 )
 
@@ -46,12 +46,12 @@ team = (
 
 async def main_stream(task: str, workflow: Workflow) -> None:
      stream = workflow.run(task, stream=True)
-     pending_responses = await process_event_stream(stream)
+     pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
      while pending_responses is not None:
         # Run the workflow until there is no more human feedback to provide,
         # in which case this workflow completes.
         stream = workflow.run(stream=True, responses=pending_responses)
-        pending_responses = await process_event_stream(stream)
+        pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
 
 task = "What is the answer to everything?"
 
@@ -63,4 +63,4 @@ if __name__ == "__main__":
 # a) Ask the team to solve the task: "Write code that calculates the pi number."
 # b) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
 # c) Create a "critic" agent and add it to the discussion. The critic should:
-#   "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. Do not be too strict.""
+#    "Provide constructive feedback. Do not be too strict."

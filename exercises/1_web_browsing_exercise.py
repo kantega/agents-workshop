@@ -21,8 +21,6 @@ async def search(query: str) -> None:
         tools=[web_search],
     ) as agent:
         print(f"User: {query}")
-        # NOTE: This agent API expects the user prompt as a positional argument.
-        # Passing it as a keyword (e.g. query=...) can be ignored/misrouted.
         result = await agent.run(query)
         print(f"Agent: {result}\n")
 
