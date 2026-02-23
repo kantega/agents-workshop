@@ -51,13 +51,13 @@ team = (
     .build()
 )
 
-async def main_stream(task: str, workflow: Workflow) -> None:
-     stream = workflow.run(task, stream=True)
+async def main_stream(task: str, team: Workflow) -> None:
+     stream = team.run(task, stream=True)
      pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
      while pending_responses is not None:
-        # Run the workflow until there is no more human feedback to provide,
-        # in which case this workflow completes.
-        stream = workflow.run(stream=True, responses=pending_responses)
+        # Run the team until there is no more human feedback to provide,
+        # in which case this team completes.
+        stream = team.run(stream=True, responses=pending_responses)
         pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
 
 task = "What is the answer to everything?"

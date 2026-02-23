@@ -10,7 +10,7 @@ from azure.identity import AzureCliCredential
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from process_event_stream import process_event_stream
 
-discussion_rounds = 2
+discussion_rounds = 3
 chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 
 # Create the author agent.
@@ -29,6 +29,16 @@ critic = chat_client.as_agent(
     chat_client=chat_client,
 )
 
+# Create the Poet Student agent.
+student = chat_client.as_agent(
+    name="Student",
+    instructions=
+        "You are a student learning about poetry. "
+        "Provide feedback from the perspective of a student. "
+        "Do not be too strict. Keep your answers somewhat short.",
+    chat_client=chat_client,
+)
+
 # Create the orchestrator coordinating the discussion
 orchestrator = chat_client.as_agent(
     name="orchestrator",
@@ -43,10 +53,10 @@ orchestrator = chat_client.as_agent(
     )
 )
 
-# Create a team with the author and critic agents.
+# Create a team with the author, critic, and student agents.
 team = (
     GroupChatBuilder(
-        participants=[author, critic],
+        participants=[author, critic, student],
         orchestrator_agent=orchestrator)
     .with_max_rounds(discussion_rounds)  # Limit the number of rounds the discussion can go on for
     .build()
@@ -54,14 +64,14 @@ team = (
 
 async def main_stream(task: str, team: Workflow) -> None:
      stream = team.run(task, stream=True)
-     pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
+     pending_responses = await process_event_stream(stream, setHumanInTheLoop=True)
      while pending_responses is not None:
         # Run the team until there is no more human feedback to provide,
         # in which case this team completes.
         stream = team.run(stream=True, responses=pending_responses)
-        pending_responses = await process_event_stream(stream, setHumanInTheLoop=False)
+        pending_responses = await process_event_stream(stream, setHumanInTheLoop=True)
 
-task = "Write a 4-line poem about the ocean."
+task = "Write a 4-line poem about the ocean using a metaphor and some alliteration."
 
 if __name__ == "__main__":
     print("Starting team discussion...")
@@ -69,8 +79,9 @@ if __name__ == "__main__":
 
 # EXERCISE: 
 # a) Try to get the author to write a poem you like by improving the task text.
-# b) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
-# c) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
+# b) Add a student agent to the discussion that gives feedback from the perspective of a student learning about poetry.
+# c) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
+# d) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
 #   - Change setHumanInTheLoop to True in the process_event_stream function call.
 #     This will allow the human to provide feedback to the agents when the workflow requests it.
 #   - Provide feedback to the discussion and observe how the discussion changes.
