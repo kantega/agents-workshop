@@ -38,7 +38,7 @@ orchestrator = chat_client.as_agent(
         "RULES:\n"
         "1. Rotate through ALL participants - do not favor any single participant\n"
         "2. Each participant should speak at least once before any participant speaks twice\n"
-        f"3. Continue for at least {discussion_rounds} rounds before ending the discussion\n"
+       f"3. Continue for at least {discussion_rounds} rounds before ending the discussion\n"
         "4. Do NOT select the same participant twice in a row"
     )
 )
@@ -72,4 +72,5 @@ if __name__ == "__main__":
 #   - Change setHumanInTheLoop to True in the process_event_stream function call.
 #     This will allow the human to provide feedback to the agents when the workflow requests it.
 #   - Provide feedback to the discussion and observe how the discussion changes.
+#
 # Just play around with the conversation. You can change the task to be anything you like.
