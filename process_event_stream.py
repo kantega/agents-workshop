@@ -10,40 +10,24 @@ from agent_framework import WorkflowEvent
 from agent_framework.orchestrations import AgentRequestInfoResponse
 
 
-async def process_event_stream(stream: AsyncIterable[WorkflowEvent], setHumanInTheLoop: bool) -> dict[str, AgentRequestInfoResponse] | None:
+async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str, AgentRequestInfoResponse] | None:
     """Process events from the workflow stream to capture human feedback requests."""
-    sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
     requests: dict[str, AgentExecutorResponse] = {}
-    last_executor_id: str | None = None
-    final_output_event: WorkflowEvent | None = None
     async for event in stream:
-        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-            if event.executor_id != last_executor_id:
-                if last_executor_id is not None:
-                    print("\n")
-                print(f"{event.executor_id}:", end=" ", flush=True)
-                last_executor_id = event.executor_id
-            print(event.data, end="", flush=True)
-            await asyncio.sleep(0)
-
-        elif event.type == "request_info" and isinstance(event.data, AgentExecutorResponse):
+        if event.type == "request_info" and isinstance(event.data, AgentExecutorResponse):
             requests[event.request_id] = event.data
 
-        elif event.type == "output":
-            # Save the final output event to process after the stream ends
-            final_output_event = event
-
-    if final_output_event is not None:
-        # The output of the workflow comes from the orchestrator and it's a list of messages
-        print("\n" + "=" * 60)
-        print("DISCUSSION COMPLETE")
-        print("=" * 60)
-        print("Final discussion summary:")
-        # To make the type checker happy, we cast event.data to the expected type
-        outputs = cast(list[Message], final_output_event.data)
-        for msg in outputs:
-            speaker = msg.author_name or msg.role
-            print(f"[{speaker}]: {msg.text}")
+        if event.type == "output":
+            # The output of the workflow comes from the orchestrator and it's a list of messages
+            print("\n" + "=" * 60)
+            print("DISCUSSION COMPLETE")
+            print("=" * 60)
+            print("Final discussion summary:")
+            # To make the type checker happy, we cast event.data to the expected type
+            outputs = cast(list[Message], event.data)
+            for msg in outputs:
+                speaker = msg.author_name or msg.role
+                print(f"[{speaker}]: {msg.text}")
 
     responses: dict[str, AgentRequestInfoResponse] = {}
     if requests:
@@ -63,19 +47,17 @@ async def process_event_stream(stream: AsyncIterable[WorkflowEvent], setHumanInT
                 )
                 for msg in recent:
                     name = msg.author_name or msg.role
-                    text = (msg.text or "")[:150]
-                    print(f"  [{name}]: {text}...")
+                    text = (msg.text or "")[:350]
+                    print(f"  [{name}]: {text}\n...")
                 print("-" * 40)
 
-            "If doInterupt is True, we can choose to interrupt the workflow here based on some condition. For example:"
-            if setHumanInTheLoop:
-                # Get human input to steer the agent
-                user_input = input(f"Feedback for {request.executor_id} (or 'skip' to approve): ")  # noqa: ASYNC250
-                if user_input.lower() == "skip":
-                    user_input = AgentRequestInfoResponse.approve()
-                else:
-                    user_input = AgentRequestInfoResponse.from_strings([user_input])
-                
-                responses[request_id] = user_input
+            # Get human input to steer the agent
+            user_input = input(f"Feedback for {request.executor_id} (or 'skip' to approve): ")  # noqa: ASYNC250
+            if user_input.lower() == "skip":
+                user_input = AgentRequestInfoResponse.approve()
+            else:
+                user_input = AgentRequestInfoResponse.from_strings([user_input])
+
+            responses[request_id] = user_input
 
     return responses if responses else None

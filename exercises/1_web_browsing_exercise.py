@@ -24,11 +24,12 @@ async def search(query: str) -> None:
         result = await agent.run(query)
         print(f"Agent: {result}\n")
 
-async def main() -> None:
-    await search("Make a summary about Kantega AS, a company located in Trondheim, Norway")
+async def main(task: str) -> None:
+    await search(task)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    task = "Make a summary about Kantega AS, a company located in Trondheim, Norway"
+    asyncio.run(main(task))
 
 # EXERCISE: write a real browsing tool to search for your name, company, or something else interesting.
 # Hint: you may use DuckDuckGo API that is free to use.

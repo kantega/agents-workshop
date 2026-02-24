@@ -1,35 +1,66 @@
 # agents-workshop
 Intro workshop til agentiske systemer med Agent Framework
 
-## TODO jobbe lokalt før workshop
-Før du kommer på workshop, sørg for at du har følgende på plass:
+# Oppsett - jobbe lokalt på maskin eller i GitHub codespaces
+
+- Clone dette repoet til din lokale maskin
 - Bruk GitHub Codespaces
-- Eller clone dette repoet til din lokale maskin
+
+## Oppsett - jobbe lokalt på maskin
+
+Anbefalt: Installere Visual Studio Code (https://code.visualstudio.com/download) 
+Alternativt: En annen valgfri IDE hvis du får til å sette opp python v.3.13 selv.
 
 ```bash
+# naviger til hvor du vil legge koden f.eks. ~/code/ eller C:\code
+cd ~/code/
 git clone https://github.com/kantega/agents-workshop.git
 cd agents-workshop
 ```
-
-- Ha virtuelt miljø management system som `venv` eller `conda` som kan lage et Python 3.13 miljø som er anbefalt.
+- Installer `conda` (https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation), alternativt, `venv` eller lignende.
+- Lag et virtuelt python 3.13-miljø via et miljøhåndteringsystem som `conda`, alternativt `venv`
 - Installer nødvendige Python-pakker fra `requirements.txt` i ditt miljø. For eksempel med bruk av `conda`:
 
 ```bash
 conda create -n agents-workshop python=3.13
 conda activate agents-workshop
 pip install -r requirements.txt
+Cmd/Ctrl + Shift + P --> Python: Select Interpreter --> Conda: agents-workshop (3.13.11)
 ```
 - Om du får feil: `CondaError: Run 'conda init' before 'conda activate'`, kjør `conda init` og start terminalen på nytt.
 
-## TODO jobbe i codespaces før workshop
+## Oppsett - jobbe i GitHub codespaces
+Alle GitHub-brukere skal ha ~60 timer kjøretid i Codespaces, men et betalingskort må være lagt til.
+En kan sette en fornuftig betalingsgrense på f.eks. 5$, og beløpet gjelder ikke før grensen på ~60 timer er nådd. 
+Bare spør hvis du lurer på noe i denne forbindelse.
 
-## TODO generelt
+1. Naviger til https://github.com/kantega/agents-workshop
+    - Eventuelt logg inn med din GitHub -bruker
+2. Trykk `.` (dot)
+3. `Cmd/Ctrl + Shift + D (Debug)` → Trykk på: `Continue working on ...`
+4. Create New Codespace 
+    - Her kan du få en feilmelding, da det kan hende det ikke er knyttet en betaling til GitHub -konto 
+5. Velg 2 cores ...
+6. Codespaces har `Python 3.13` og `pip` forhåndsinstallert
+    - basert på innholdet i .devcontainer/devcontainer.json
+7. Åpne terminalen og installer pakker:
 
-- Du skal få en API-nøkkel til Azure OpenAI-tjenesten fra oss på worshoppen. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
+```bash
+pip install -r requirements.txt
+```
+
+## Oppsett - Felles for å jobbe lokalt og i codespaces
+
+- Du får en API-nøkkel til Azure OpenAI-tjenesten fra oss. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
 
 ```# .env
-API_KEY="din_api_nøkkel_her"
+AZURE_OPENAI_API_KEY="din_api_nøkkel_her"
+AZURE_OPENAI_ENDPOINT="https://kagents.openai.azure.com/"
+AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-5-nano"
+AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-5-nano"
+AZURE_OPENAI_API_VERSION="2025-01-01-preview"
 ```
+
 - **Test at alt fungerer ved å kjøre `python test_environment.py`. Dette skriptet sjekker at alle nødvendige pakker er installert og at Docker fungerer som forventet.**
 
 ## Om Agentiske Systemer
@@ -85,10 +116,10 @@ Agentiske systemer er AI-systemer som består av flere autonome agenter som kan 
 | **Ressursbruk** | Lavere | Høyere (flere modellkall) |
 | **Transparens** | Svart boks | Synlig diskusjon og resonnering |
 
-### Om AutoGen
-> Refactor this section
+### Om Agent Framework
+# Refactor this section ->
 
-AutoGen er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer. Det tilbyr:
+Agent Framework er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer. Det tilbyr:
 
 **Hovedfunksjoner:**
 - **Multi-agent samtaler**: Agenter kan kommunisere i strukturerte diskusjoner
@@ -97,30 +128,34 @@ AutoGen er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer
 - **Menneskelig integrasjon**: Kan inkludere mennesker i agent-diskusjoner
 - **Kodegenerering og -kjøring**: Agenter kan skrive, kjøre og debugge kode
 
-**Fordeler med AutoGen:**
+**Fordeler med Agent Framework:**
 - Enkel å sette opp og konfigurere
 - Godt dokumentert og aktivt vedlikeholdt
 - Støtter forskjellige LLM-er (OpenAI, Azure, lokale modeller)
 - Innebygd støtte for kodeeksekverering og verktøybruk
 - Fleksibel arkitektur som kan tilpasses mange bruksområder
 
+
+Oppdatering februar 2026:
+Større oppdatering av workshop med migrering til Agent Framework
+
 Oppdatering oktober 2025:
 AutoGen skal ikke utvikles videre (kun bugfix), siden Microsoft har lansert en ny plattform [Microsoft Agent Framework]("https://github.com/microsoft/agent-framework") som bygger videre på konseptene fra AutoGen og Semantic Kernel.
 
-### AutoGen Grunnleggende Konsepter
+### Agent Framework - Grunnleggende Konsepter
 
-For å forstå hvordan AutoGen fungerer, er det viktig å kjenne til de grunnleggende byggesteinene:
+For å forstå hvordan Agent Framework fungerer, er det viktig å kjenne til de grunnleggende byggesteinene:
 
 
 #### Agenter (Agents)
-Agenter er de grunnleggende enhetene i AutoGen som kan kommunisere og utføre oppgaver:
+Agenter er de grunnleggende enhetene i Agent Framework som kan kommunisere og utføre oppgaver:
 
 **AssistantAgent:**
 - Standard AI-agent som bruker en språkmodell
 - Kan ha spesialiserte systemmeddelelser for å definere rolle og oppførsel
 - Kan utstyres med verktøy (tools) for utvidede funksjoner
 
-**UserProxyAgent:**
+**UserProxyAgent - TODO: refaktor:** 
 - Representerer en menneskelig bruker i samtalen
 - Kan be om input fra brukeren eller fungere automatisk
 - Brukes for å integrere menneskelig vurdering i agent-arbeidsflyter
@@ -130,8 +165,8 @@ Agenter er de grunnleggende enhetene i AutoGen som kan kommunisere og utføre op
 - Kan utføre kode i isolerte miljøer (som Docker-containere)
 - Sikrer trygg eksekverering av generert kode
 
-#### Teams og Kommunikasjonsmønstre
-AutoGen organiserer agenter i team med definerte kommunikasjonsmønstre:
+#### Teams og kommunikasjonsmønstre
+Agent Framework organiserer agenter i team med definerte kommunikasjonsmønstre:
 
 **RoundRobinGroupChat:**
 - Agenter snakker i en forhåndsbestemt rekkefølge
@@ -157,12 +192,12 @@ Definerer når en samtale eller oppgave skal avsluttes:
 - Kan kombinere flere termineringsvilkår med logiske operatorer (AND/OR)
 
 #### Modellklienter (Model Clients)
-AutoGen støtter forskjellige språkmodeller gjennom modellklienter:
+Agent Framework støtter forskjellige språkmodeller gjennom modellklienter:
 
 
 **AzureOpenAIChatCompletionClient:**
 - Kobler til Azure OpenAI-tjenester
-- Støtter modeller som GPT-4, GPT-4o, og GPT-4.1-nano
+- Støtter modeller som GPT-5, GPT-5o, og GPT-5-nano
 - Krever API-nøkkel og endpoint-konfigurasjon
 
 #### Verktøy (Tools)
@@ -185,7 +220,7 @@ async def web_search(query: str) -> str:
 AutoGen bruker asynkron programmering for effektiv håndtering:
 
 **Async/Await:**
-- Alle AutoGen-operasjoner er asynkrone
+- Alle Agent Framework-operasjoner er asynkrone
 - Tillater parallell prosessering og bedre ressursutnyttelse
 - Krever `asyncio.run()` for å kjøre hovedfunksjoner
 
@@ -206,10 +241,10 @@ result = await agent.run(task="Write a Python function to calculate fibonacci nu
 print(result.messages[-1])  # Vis siste melding
 ```
 
-**agent.run_stream() - Streaming kjøring:**
+**agent.run(stream=True) - Streaming kjøring:**
 ```python
 # Kjør agent med sanntidsvisning
-stream = agent.run_stream(task="Explain quantum computing")
+stream = agent.run("Explain quantum computing", stream=True)
 await Console(stream)  # Vis meldinger mens de genereres
 ```
 

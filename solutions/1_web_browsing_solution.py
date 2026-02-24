@@ -3,12 +3,15 @@ import asyncio
 from agent_framework import tool
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
+from dotenv import load_dotenv
 from duckduckgo_search import DDGS
 
+load_dotenv()
 
 # Define a tool that searches the web for information.
 @tool(approval_mode="never_require")
 async def web_search_dgg(query: str) -> str:
+    
     with DDGS(verify=False) as ddgs:
         results = ddgs.text(query, max_results=3, safesearch="off", )
         all_results = []
