@@ -1,17 +1,17 @@
 # agents-workshop
-Intro workshop til agentiske systemer med AutoGen
+Intro workshop til agentiske systemer med Agent Framework
 
-## TODO før workshop
+## TODO jobbe lokalt før workshop
 Før du kommer på workshop, sørg for at du har følgende på plass:
-- Clone dette repoet til din lokale maskin.
+- Bruk GitHub Codespaces
+- Eller clone dette repoet til din lokale maskin
 
 ```bash
 git clone https://github.com/kantega/agents-workshop.git
 cd agents-workshop
 ```
 
-- Har virtuelt miljø management system som `venv` eller `conda` som kan lage et Python 3.13 miljø som er anbefalt.
-- Har Docker installert. Om ikke, installer Docker med å følge instruksjonene på [docker.com](https://docs.docker.com/get-docker/). Sørg for at Docker-tjenesten kjører, f.eks. på Linux: `sudo systemctl start docker`.
+- Ha virtuelt miljø management system som `venv` eller `conda` som kan lage et Python 3.13 miljø som er anbefalt.
 - Installer nødvendige Python-pakker fra `requirements.txt` i ditt miljø. For eksempel med bruk av `conda`:
 
 ```bash
@@ -20,6 +20,10 @@ conda activate agents-workshop
 pip install -r requirements.txt
 ```
 - Om du får feil: `CondaError: Run 'conda init' before 'conda activate'`, kjør `conda init` og start terminalen på nytt.
+
+## TODO jobbe i codespaces før workshop
+
+## TODO generelt
 
 - Du skal få en API-nøkkel til Azure OpenAI-tjenesten fra oss på worshoppen. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
 
@@ -82,6 +86,7 @@ Agentiske systemer er AI-systemer som består av flere autonome agenter som kan 
 | **Transparens** | Svart boks | Synlig diskusjon og resonnering |
 
 ### Om AutoGen
+> Refactor this section
 
 AutoGen er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer. Det tilbyr:
 
@@ -105,6 +110,7 @@ AutoGen skal ikke utvikles videre (kun bugfix), siden Microsoft har lansert en n
 ### AutoGen Grunnleggende Konsepter
 
 For å forstå hvordan AutoGen fungerer, er det viktig å kjenne til de grunnleggende byggesteinene:
+
 
 #### Agenter (Agents)
 Agenter er de grunnleggende enhetene i AutoGen som kan kommunisere og utføre oppgaver:
@@ -153,21 +159,11 @@ Definerer når en samtale eller oppgave skal avsluttes:
 #### Modellklienter (Model Clients)
 AutoGen støtter forskjellige språkmodeller gjennom modellklienter:
 
+
 **AzureOpenAIChatCompletionClient:**
 - Kobler til Azure OpenAI-tjenester
 - Støtter modeller som GPT-4, GPT-4o, og GPT-4.1-nano
 - Krever API-nøkkel og endpoint-konfigurasjon
-
-**Konfigurasjon:**
-```python
-model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="model-deployment-name",
-    model="model-name",
-    api_version="api-version" #"2025-01-01-preview",
-    azure_endpoint="https://your-azure-openai-endpoint.openai.azure.com/",
-    api_key=api_key,
-)
-```
 
 #### Verktøy (Tools)
 Agenter kan utstyres med verktøy for å utføre spesifikke oppgaver:
@@ -264,22 +260,10 @@ asyncio.run(main())
 ```
 
 **Med Menneskelig Interaksjon:**
+Verbos håndtering av requests i stream events for å gi feedback til workflow-resultater. 
+
 ```python
-from autogen_agentchat.agents import UserProxyAgent
-
-async def interactive_session():
-    assistant = AssistantAgent("assistant", model_client=model_client)
-    user_proxy = UserProxyAgent("user", input_func=input)
-    
-    team = RoundRobinGroupChat(
-        [assistant, user_proxy],
-        termination_condition=TextMentionTermination("DONE")
-    )
-    
-    # Bruker kan delta i samtalen
-    await Console(team.run_stream(task="Help me plan a Python project"))
-
-asyncio.run(interactive_session())
+# Todo
 ```
 
 #### Viktige Metoder og Konsepter
@@ -326,7 +310,7 @@ AutoGen har innebygde sikkerhetsfunksjoner:
 - Definerte arbeidsmapper for hver oppgave
 - Begrenset tilgang til systemressurser
 
-### Arkitekturmønstre i AutoGen
+### Arkitekturmønstre i Agent Framework
 
 **Peer Review-mønster:**
 - En agent foreslår løsninger
@@ -350,7 +334,7 @@ For å få mest mulig ut av workshoppen følger øvelsene en logisk progresjon f
 ### 1. 🌐 Web Browsing med Verktøy
 **Fil:** `web_browsing_exercise.py`  
 **Konsepter:** Agent tools, funksjonskall, enkelt agent-system  
-**Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i AutoGen.
+**Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i Agent Framework.
 
 ### 2. 💬 Agent-til-Agent Diskusjon  
 **Fil:** `discussion_exercise.py`  

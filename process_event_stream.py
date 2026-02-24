@@ -1,3 +1,5 @@
+import asyncio
+import sys
 from collections.abc import AsyncIterable
 from typing import cast
 
@@ -10,8 +12,10 @@ from agent_framework.orchestrations import AgentRequestInfoResponse
 
 async def process_event_stream(stream: AsyncIterable[WorkflowEvent], setHumanInTheLoop: bool) -> dict[str, AgentRequestInfoResponse] | None:
     """Process events from the workflow stream to capture human feedback requests."""
+    sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
     requests: dict[str, AgentExecutorResponse] = {}
     last_executor_id: str | None = None
+    final_output_event: WorkflowEvent | None = None
     async for event in stream:
         if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
             if event.executor_id != last_executor_id:
@@ -20,21 +24,26 @@ async def process_event_stream(stream: AsyncIterable[WorkflowEvent], setHumanInT
                 print(f"{event.executor_id}:", end=" ", flush=True)
                 last_executor_id = event.executor_id
             print(event.data, end="", flush=True)
+            await asyncio.sleep(0)
 
-        if event.type == "request_info" and isinstance(event.data, AgentExecutorResponse):
+        elif event.type == "request_info" and isinstance(event.data, AgentExecutorResponse):
             requests[event.request_id] = event.data
 
-        if event.type == "output":
-            # The output of the workflow comes from the orchestrator and it's a list of messages
-            print("\n" + "=" * 60)
-            print("DISCUSSION COMPLETE")
-            print("=" * 60)
-            print("Final discussion summary:")
-            # To make the type checker happy, we cast event.data to the expected type
-            outputs = cast(list[Message], event.data)
-            for msg in outputs:
-                speaker = msg.author_name or msg.role
-                print(f"[{speaker}]: {msg.text}")
+        elif event.type == "output":
+            # Save the final output event to process after the stream ends
+            final_output_event = event
+
+    if final_output_event is not None:
+        # The output of the workflow comes from the orchestrator and it's a list of messages
+        print("\n" + "=" * 60)
+        print("DISCUSSION COMPLETE")
+        print("=" * 60)
+        print("Final discussion summary:")
+        # To make the type checker happy, we cast event.data to the expected type
+        outputs = cast(list[Message], final_output_event.data)
+        for msg in outputs:
+            speaker = msg.author_name or msg.role
+            print(f"[{speaker}]: {msg.text}")
 
     responses: dict[str, AgentRequestInfoResponse] = {}
     if requests:
