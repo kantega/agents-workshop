@@ -1,39 +1,35 @@
 import asyncio
-import os
 
+from agent_framework import tool
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 
-from autogen_agentchat.agents import AssistantAgent
-from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
-
 load_dotenv()
-api_key = os.getenv("API_KEY")
-
-model_client = AzureOpenAIChatCompletionClient(
-    azure_deployment="gpt-5-nano",
-    model="gpt-5-nano",
-    api_version="2025-01-01-preview",
-    azure_endpoint="https://agentsbcd.openai.azure.com/",
-    api_key=api_key,
-)
-
 
 # Define a tool that searches the web for information.
 # For simplicity, we will use a mock function here that returns a static string.
+@tool(approval_mode="never_require")
 async def web_search(query: str) -> str:
     """Find information on the web"""
+    print(f"Tool called with query: {query}")
     return "Kantega is an IT consultancy, with offices in Trondheim, Oslo and Bergen"
 
+async def search(query: str) -> None:
+    async with AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+        instructions="Make a clear and easy to read answer to the user query. Use tools to solve tasks. Only ask the tools 5 times and with strict str queries!",
+        tools=[web_search],
+    ) as agent:
+        print(f"User: {query}")
+        result = await agent.run(query)
+        print(f"Agent: {result}\n")
 
-agent = AssistantAgent(
-    name="assistant",
-    model_client=model_client,
-    tools=[web_search],
-    system_message="Use tools to solve tasks.",
-)
+async def main(task: str) -> None:
+    await search(task)
 
-result = asyncio.run(agent.run(task="Find information about Kantega"))
-print(result.messages[-1])
+if __name__ == "__main__":
+    task = "Make a summary about Kantega AS, a company located in Trondheim, Norway"
+    asyncio.run(main(task))
 
 # EXERCISE: write a real browsing tool to search for your name, company, or something else interesting.
 # Hint: you may use DuckDuckGo API that is free to use.

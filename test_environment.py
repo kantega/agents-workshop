@@ -23,8 +23,10 @@ def test_imports():
     """Test if all required packages can be imported with correct versions."""
     packages = {
         "dotenv": ("python-dotenv", None),
-        "autogen_agentchat": ("autogen-agentchat", "0.7.5"),
-        "autogen_ext": ("autogen-ext", "0.7.5"),
+        "duckduckgo_search": ("duckduckgo-search", "8.1.1"),
+        "agent_framework": ("agent-framework", "1.0.0rc1"),
+        "azure.identity": ("azure-identity", "1.25.2"),
+        # "opentelemetry.semantic.conventions.ai": ("opentelemetry-semantic-conventions-ai", "0.4.13"),
     }
 
     all_imports_ok = True
@@ -32,7 +34,10 @@ def test_imports():
     for module_name, (package_name, required_version) in packages.items():
         print(f"Checking {package_name}...", end=" ")
         try:
-            module = __import__(module_name)
+            if package_name == "azure-identity":
+                module = __import__(module_name, fromlist=['identity'])
+            else:
+                module = __import__(module_name)
             if required_version:
                 # Check version
                 version = getattr(module, "__version__", None)
@@ -58,72 +63,6 @@ def test_imports():
     return all_imports_ok
 
 
-def test_docker():
-    """Check if Docker is available."""
-    import subprocess
-
-    print("Checking Docker...", end=" ")
-    try:
-        result = subprocess.run(
-            ["docker", "--version"], capture_output=True, text=True, timeout=5
-        )
-        if result.returncode == 0:
-            version = result.stdout.strip()
-            print(f"✓ {version}")
-            return True
-        else:
-            print("✗ Docker command failed")
-            return False
-    except FileNotFoundError:
-        print("✗ Docker not found (install from https://www.docker.com/)")
-        return False
-    except Exception as e:
-        print(f"✗ Error checking Docker: {e}")
-        return False
-
-
-def test_docker_running():
-    """Check if Docker daemon is running."""
-    import subprocess
-
-    print("Checking Docker daemon...", end=" ")
-    try:
-        result = subprocess.run(
-            ["docker", "ps"], capture_output=True, text=True, timeout=5
-        )
-        if result.returncode == 0:
-            print("✓ Docker daemon is running")
-            return True
-        else:
-            print("✗ Docker daemon not running (start Docker)")
-            return False
-    except Exception as e:
-        print(f"✗ Error checking Docker daemon: {e}")
-        return False
-
-
-def test_work_directory():
-    """Check if work directory exists or can be created."""
-    work_dir = Path("coding")
-    print(f"Checking work directory '{work_dir}'...", end=" ")
-
-    if work_dir.exists():
-        if work_dir.is_dir():
-            print("✓ Directory exists")
-            return True
-        else:
-            print("✗ Path exists but is not a directory")
-            return False
-    else:
-        try:
-            work_dir.mkdir(parents=True, exist_ok=True)
-            print("✓ Directory created")
-            return True
-        except Exception as e:
-            print(f"✗ Cannot create directory: {e}")
-            return False
-
-
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -137,13 +76,6 @@ def main():
     print()
 
     results.append(("Package Imports", test_imports()))
-    print()
-
-    results.append(("Docker Installation", test_docker()))
-    results.append(("Docker Daemon", test_docker_running()))
-    print()
-
-    results.append(("Work Directory", test_work_directory()))
     print()
 
     print("=" * 60)

@@ -1,10 +1,8 @@
 # Core dependencies for autogen exercises and examples
 python-dotenv>=1.0.0
-autogen-agentchat==0.7.5
-autogen-ext[openai]==0.7.5
 duckduckgo-search==8.1.1
-docker>=7.0.0
-autogen-ext[docker]==0.7.5
-
+agent-framework[azure]==1.0.0rc1
+azure-identity==1.25.2
+opentelemetry-semantic-conventions-ai==0.4.13
 # Code linting and formatting tools. Not necessary for running the code.
 # ruff
