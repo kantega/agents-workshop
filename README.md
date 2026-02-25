@@ -4,6 +4,7 @@ Intro workshop til agentiske systemer med [Agent Framework](https://learn.micros
 ## Oppsett - jobbe lokalt på maskin eller i GitHub codespaces
 
 - Clone dette repoet til din lokale maskin
+- eller
 - Bruk GitHub Codespaces
 
 ### Oppsett - jobbe lokalt på maskin
@@ -15,26 +16,35 @@ Alternativ: En annen valgfri IDE hvis du ønsker å kjøre python v3.13 der, alt
 ```bash
 # naviger til hvor du vil legge koden f.eks. ~/code/ eller C:\code
 cd ~/code/
+
 git clone https://github.com/kantega/agents-workshop.git
+
 cd agents-workshop
 ```
+
 - Installer `conda` (https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation), alternativt, `venv` eller lignende.
 - Lag et virtuelt python 3.13-miljø via et miljøhåndteringsystem som `conda`, alternativt `venv`
 - Installer nødvendige Python-pakker fra `requirements.txt` i ditt miljø. For eksempel med bruk av `conda`:
 
 ```bash
 conda create -n agents-workshop python=3.13
+
 conda activate agents-workshop
+
 pip install -r requirements.txt
-Cmd/Ctrl + Shift + P --> Python: Select Interpreter --> Conda: agents-workshop (3.13.11)
+
+Cmd/Ctrl + Shift + P → Søk: Python Python: Select Interpreter → Conda: agents-workshop (3.13.11)
 ```
 - Om du får feil: `CondaError: Run 'conda init' before 'conda activate'`, kjør `conda init` og start terminalen på nytt.
 
 ### Oppsett - jobbe i GitHub codespaces
 
-> Alle GitHub-brukere skal ha minimum ~60 gratis timer kjøretid i Codespaces. Det kan likevel hende en må legge til et betalingskort. Bare spør hvis du lurer på noe i denne forbindelse.
+> Alle GitHub-brukere skal ha minimum ~60 gratis timer kjøretid i Codespaces. 
+> Det kan likevel hende en må legge til et betalingskort. 
+> Bare spør hvis du lurer på noe i denne forbindelse.
 
-> En kan [sette en betalingsgrense](https://github.com/settings/billing/budgets) på f.eks. 3$ og beløpet gjelder ikke før grensen på ~60 gratis timer er nådd. Etter 60 gratis timer påfølger kostnad på $0.18. [Les mer på codespaces](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces#pricing).
+> En kan [sette en grense](https://github.com/settings/billing/budgets) på f.eks. 3$ og beløpet gjelder ikke før grensen på ~60 gratis timer er nådd. 
+> Etter 60 gratis timer påfølger kostnad på $0.18. [Les mer på codespaces](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces#pricing).
 
 1. Naviger til https://github.com/kantega/agents-workshop
     - Eventuelt logg inn med din GitHub -bruker
@@ -51,7 +61,7 @@ Cmd/Ctrl + Shift + P --> Python: Select Interpreter --> Conda: agents-workshop (
 pip install -r requirements.txt
 ```
 
-### Oppsett - Felles for å jobbe lokalt og i codespaces
+### Oppsett - Felles jobbe lokalt eller i GitHub codespaces
 
 - Du får en API-nøkkel til Azure OpenAI-tjenesten fra oss. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
 

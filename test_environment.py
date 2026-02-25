@@ -62,10 +62,36 @@ def test_imports():
     return all_imports_ok
 
 
+def test_azure_openai_connection():
+    """Test that we can connect to Azure OpenAI and get a response."""
+    print("Checking Azure OpenAI connection...", end=" ")
+    try:
+        import asyncio
+
+        from dotenv import load_dotenv
+        load_dotenv()
+
+        from agent_framework.azure import AzureOpenAIResponsesClient
+        from azure.identity import AzureCliCredential
+
+        async def _test():
+            client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
+            agent = client.as_agent(name="test", instructions="Reply with only 'ok'.")
+            result = await agent.run("Say ok")
+            return result
+
+        asyncio.run(_test())
+        print("✓ Connected and got a response")
+        return True
+    except Exception as e:
+        print(f"✗ {e}")
+        return False
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
-    print("Testing environment for Exercise 4: Code Generation with 2 Agents")
+    print("Testing environment for exercises...")
     print("=" * 60)
     print()
 
@@ -75,6 +101,9 @@ def main():
     print()
 
     results.append(("Package Imports", test_imports()))
+    print()
+
+    results.append(("Azure OpenAI Connection", test_azure_openai_connection()))
     print()
 
     print("=" * 60)
