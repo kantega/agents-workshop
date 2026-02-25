@@ -14,7 +14,7 @@ rounds_of_discussion = 2
 load_dotenv()
 
 async def main_stream(task: str) -> None:
-    
+
     client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
 
     # Create the coding agent.
@@ -66,4 +66,5 @@ if __name__ == "__main__":
 # b) Ask the team to solve the task: "Write code that calculates the pi number."
 # c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
 # d) Create a "critic" agent and add it to the discussion. The critic should:
-#    "Provide constructive feedback. Do not be too strict."
+#       "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. "
+#       "Do not be too strict. Keep your answers somewhat short.",

@@ -48,9 +48,9 @@ async def main_stream(task: str) -> None:
     # Create a team with the primary and critic agents.
     team = (
         GroupChatBuilder(
-        participants=[primary, critic],
-        orchestrator_agent=orchestrator,
-        intermediate_outputs=True)
+            participants=[primary, critic],
+            orchestrator_agent=orchestrator,
+        )
         .with_max_rounds(rounds_of_discussion)  # Limit the number of rounds the discussion can go on for
         .build()
     )
@@ -79,4 +79,5 @@ if __name__ == "__main__":
 # b) Ask the team to solve the task: "Write code that calculates the pi number."
 # c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
 # d) Create a "critic" agent and add it to the discussion. The critic should:
-#    "Provide constructive feedback. Do not be too strict."
+#       "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. "
+#       "Do not be too strict. Keep your answers somewhat short.",
