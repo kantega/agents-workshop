@@ -14,6 +14,7 @@ rounds_of_discussion = 2
 load_dotenv()
 
 async def main_stream(task: str) -> None:
+    
     client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
 
     # Create the coding agent.
