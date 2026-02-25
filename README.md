@@ -1,5 +1,5 @@
 # agents-workshop
-Intro workshop til agentiske systemer med Agent Framework
+Intro workshop til agentiske systemer med [Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/?pivots=programming-language-python)
 
 ## Oppsett - jobbe lokalt på maskin eller i GitHub codespaces
 
@@ -10,7 +10,7 @@ Intro workshop til agentiske systemer med Agent Framework
 
 Anbefalt: Installere Visual Studio Code (https://code.visualstudio.com/download)
 
-Alternativ: En annen valgfri IDE hvis du har mulighet til å sette opp python v.3.13 selv.
+Alternativ: En annen valgfri IDE hvis du ønsker å kjøre python v3.13 der, alternativt kommandolinje.
 
 ```bash
 # naviger til hvor du vil legge koden f.eks. ~/code/ eller C:\code
@@ -32,15 +32,15 @@ Cmd/Ctrl + Shift + P --> Python: Select Interpreter --> Conda: agents-workshop (
 
 ### Oppsett - jobbe i GitHub codespaces
 
-> Alle GitHub-brukere skal ha minimum ~60 timer kjøretid i Codespaces. Det kan hende en må legge til et betalingskort.
+> Alle GitHub-brukere skal ha minimum ~60 gratis timer kjøretid i Codespaces. Det kan likevel hende en må legge til et betalingskort. Bare spør hvis du lurer på noe i denne forbindelse.
 
-> En kan sette en fornuftig betalingsgrense på f.eks. 3$, og beløpet gjelder ikke før grensen på ~60 timer er nådd. Bare spør hvis du lurer på noe i denne forbindelse.
+> En kan [sette en betalingsgrense](https://github.com/settings/billing/budgets) på f.eks. 3$ og beløpet gjelder ikke før grensen på ~60 gratis timer er nådd. Etter 60 gratis timer påfølger kostnad på $0.18. [Les mer på codespaces](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces#pricing).
 
 1. Naviger til https://github.com/kantega/agents-workshop
     - Eventuelt logg inn med din GitHub -bruker
 2. Trykk `.` (dot)
 3. `Cmd/Ctrl + Shift + D (Debug)` → Trykk på: `Continue working on ...`
-4. Create New Codespace 
+4. Create New Codespace
     - Her kan du få en feilmelding, da det kan hende det ikke er knyttet en betaling til GitHub -konto 
 5. Velg 2 cores ...
 6. Codespaces har `Python 3.13` og `pip` forhåndsinstallert
@@ -60,10 +60,9 @@ AZURE_OPENAI_API_KEY="din_api_nøkkel_her"
 AZURE_OPENAI_ENDPOINT="https://kagents.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-5-nano"
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-5-nano"
-AZURE_OPENAI_API_VERSION="2025-01-01-preview"
 ```
 
-- **Test at alt fungerer ved å kjøre `python test_environment.py`. Dette skriptet sjekker at alle nødvendige pakker er installert og at Docker fungerer som forventet.**
+- **Test at alt fungerer ved å kjøre `python test_environment.py`. Dette skriptet sjekker at alle nødvendige pakker er installert.**
 
 ## Om Agentiske Systemer
 
