@@ -2,7 +2,6 @@ import asyncio
 
 from agent_framework import tool
 from agent_framework.azure import AzureOpenAIChatClient
-from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,7 +15,7 @@ async def web_search(query: str) -> str:
     return "Kantega is an IT consultancy, with offices in Trondheim, Oslo and Bergen"
 
 async def search(query: str) -> None:
-    async with AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+    async with AzureOpenAIChatClient().as_agent(
         instructions="Make a clear and easy to read answer to the user query. Use tools to solve tasks. Only ask the tools 5 times and with strict str queries!",
         tools=[web_search],
     ) as agent:

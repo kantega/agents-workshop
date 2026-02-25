@@ -2,7 +2,6 @@ import asyncio
 
 from agent_framework import tool
 from agent_framework.azure import AzureOpenAIChatClient
-from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 from duckduckgo_search import DDGS
 
@@ -20,7 +19,7 @@ async def web_search_dgg(query: str) -> str:
         return "\n\n".join(all_results)  # Combine all results
 
 async def search(query: str) -> None:
-    async with AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+    async with AzureOpenAIChatClient().as_agent(
         instructions="Make a clear and easy to read answer to the user query. Use tools to solve tasks. Only perform a web search once, using a single well-formed query. Do not search multiple times.",
         tools=[web_search_dgg],
     ) as agent:

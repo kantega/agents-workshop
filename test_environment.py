@@ -24,7 +24,6 @@ def test_imports():
         "dotenv": ("python-dotenv", None),
         "duckduckgo_search": ("duckduckgo-search", "8.1.1"),
         "agent_framework": ("agent-framework", "1.0.0rc1"),
-        "azure.identity": ("azure-identity", "1.25.2"),
         # "opentelemetry.semantic.conventions.ai": ("opentelemetry-semantic-conventions-ai", "0.4.13"),
     }
 
@@ -33,10 +32,7 @@ def test_imports():
     for module_name, (package_name, required_version) in packages.items():
         print(f"Checking {package_name}...", end=" ")
         try:
-            if package_name == "azure-identity":
-                module = __import__(module_name, fromlist=['identity'])
-            else:
-                module = __import__(module_name)
+            module = __import__(module_name)
             if required_version:
                 # Check version
                 version = getattr(module, "__version__", None)
@@ -72,10 +68,9 @@ def test_azure_openai_connection():
         load_dotenv()
 
         from agent_framework.azure import AzureOpenAIResponsesClient
-        from azure.identity import AzureCliCredential
 
         async def _test():
-            client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
+            client = AzureOpenAIResponsesClient()
             agent = client.as_agent(name="test", instructions="Reply with only 'ok'.")
             result = await agent.run("Say ok")
             return result

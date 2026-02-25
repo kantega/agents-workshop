@@ -4,7 +4,6 @@ from pathlib import Path
 
 from agent_framework.azure import AzureOpenAIResponsesClient
 from agent_framework.orchestrations import GroupChatBuilder
-from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -15,7 +14,7 @@ load_dotenv()
 
 async def main_stream(task: str) -> None:
 
-    client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
+    client = AzureOpenAIResponsesClient()
 
     # Create the coding agent.
     primary = client.as_agent(
@@ -49,7 +48,7 @@ async def main_stream(task: str) -> None:
     team = (
         GroupChatBuilder(
             participants=[primary, critic],
-            orchestrator_agent=orchestrator,
+            orchestrator_agent=orchestrator
         )
         .with_max_rounds(rounds_of_discussion)  # Limit the number of rounds the discussion can go on for
         .build()
@@ -66,7 +65,7 @@ async def main_stream(task: str) -> None:
 
 if __name__ == "__main__":
     print("Starting team discussion...")
-    task = "What is the answer to everything?"
+    task = "Write code that calculates the pi number."
     asyncio.run(main_stream(task))
     
 # EXERCISES:
@@ -74,7 +73,7 @@ if __name__ == "__main__":
 #   "RULES:\n"
 #   "1. Rotate through ALL participants - do not favor any single participant\n"
 #   "2. Each participant should speak at least once before any participant speaks twice\n"
-#   "3. Continue for at least {rounds_of_discussion} rounds before ending the discussion\n"
+#   "3. Continue for at least {rounds_of_discussion - 1} rounds before ending the discussion\n"
 #   "4. Do NOT select the same participant twice in a row"
 # b) Ask the team to solve the task: "Write code that calculates the pi number."
 # c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.

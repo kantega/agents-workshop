@@ -4,7 +4,6 @@ from pathlib import Path
 
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework.orchestrations import GroupChatBuilder
-from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -15,7 +14,7 @@ load_dotenv()
 
 async def main_stream(task: str) -> None:
 
-    client = AzureOpenAIChatClient(credential=AzureCliCredential())
+    client = AzureOpenAIChatClient()
 
     # Create the author agent.
     author = client.as_agent(
