@@ -1,15 +1,16 @@
 # agents-workshop
 Intro workshop til agentiske systemer med Agent Framework
 
-# Oppsett - jobbe lokalt på maskin eller i GitHub codespaces
+## Oppsett - jobbe lokalt på maskin eller i GitHub codespaces
 
 - Clone dette repoet til din lokale maskin
 - Bruk GitHub Codespaces
 
-## Oppsett - jobbe lokalt på maskin
+### Oppsett - jobbe lokalt på maskin
 
-Anbefalt: Installere Visual Studio Code (https://code.visualstudio.com/download) 
-Alternativt: En annen valgfri IDE hvis du får til å sette opp python v.3.13 selv.
+Anbefalt: Installere Visual Studio Code (https://code.visualstudio.com/download)
+
+Alternativ: En annen valgfri IDE hvis du har mulighet til å sette opp python v.3.13 selv.
 
 ```bash
 # naviger til hvor du vil legge koden f.eks. ~/code/ eller C:\code
@@ -29,10 +30,11 @@ Cmd/Ctrl + Shift + P --> Python: Select Interpreter --> Conda: agents-workshop (
 ```
 - Om du får feil: `CondaError: Run 'conda init' before 'conda activate'`, kjør `conda init` og start terminalen på nytt.
 
-## Oppsett - jobbe i GitHub codespaces
-Alle GitHub-brukere skal ha ~60 timer kjøretid i Codespaces, men et betalingskort må være lagt til.
-En kan sette en fornuftig betalingsgrense på f.eks. 5$, og beløpet gjelder ikke før grensen på ~60 timer er nådd. 
-Bare spør hvis du lurer på noe i denne forbindelse.
+### Oppsett - jobbe i GitHub codespaces
+
+> Alle GitHub-brukere skal ha minimum ~60 timer kjøretid i Codespaces. Det kan hende en må legge til et betalingskort.
+
+> En kan sette en fornuftig betalingsgrense på f.eks. 3$, og beløpet gjelder ikke før grensen på ~60 timer er nådd. Bare spør hvis du lurer på noe i denne forbindelse.
 
 1. Naviger til https://github.com/kantega/agents-workshop
     - Eventuelt logg inn med din GitHub -bruker
@@ -49,7 +51,7 @@ Bare spør hvis du lurer på noe i denne forbindelse.
 pip install -r requirements.txt
 ```
 
-## Oppsett - Felles for å jobbe lokalt og i codespaces
+### Oppsett - Felles for å jobbe lokalt og i codespaces
 
 - Du får en API-nøkkel til Azure OpenAI-tjenesten fra oss. Opprett en `.env`-fil i prosjektmappen din (i root) og lim inn følgende i `.env`-filen:
 

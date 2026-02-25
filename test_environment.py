@@ -3,7 +3,6 @@ Test script to verify all required components for exercises are installed.
 """
 
 import sys
-from pathlib import Path
 
 
 def test_python_version():
