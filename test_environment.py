@@ -23,7 +23,7 @@ def test_imports():
     """Test if all required packages can be imported with correct versions."""
     packages = {
         "dotenv": ("python-dotenv", None),
-        "duckduckgo_search": ("duckduckgo-search", "8.1.1"),
+        "ddgs": ("ddgs", "9.10.0"),
         "agent_framework": ("agent-framework", "1.0.0rc1"),
         "opentelemetry": ("opentelemetry-semantic-conventions-ai", "0.4.13"),
     }
