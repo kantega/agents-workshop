@@ -3,6 +3,7 @@ Test script to verify all required components for exercises are installed.
 """
 
 import sys
+from importlib.metadata import version
 
 
 def test_python_version():
@@ -24,7 +25,7 @@ def test_imports():
         "dotenv": ("python-dotenv", None),
         "duckduckgo_search": ("duckduckgo-search", "8.1.1"),
         "agent_framework": ("agent-framework", "1.0.0rc1"),
-        # "opentelemetry.semantic.conventions.ai": ("opentelemetry-semantic-conventions-ai", "0.4.13"),
+        "opentelemetry": ("opentelemetry-semantic-conventions-ai", "0.4.13"),
     }
 
     all_imports_ok = True
@@ -32,14 +33,22 @@ def test_imports():
     for module_name, (package_name, required_version) in packages.items():
         print(f"Checking {package_name}...", end=" ")
         try:
-            module = __import__(module_name)
+            opentelemetry_version = None
+            module = None
+            if module_name == "opentelemetry":
+                opentelemetry_version = version('opentelemetry-semantic-conventions-ai')
+            else:    
+                module = __import__(module_name)
             if required_version:
                 # Check version
-                version = getattr(module, "__version__", None)
-                if version == required_version:
-                    print(f"✓ (version {version})")
-                elif version:
-                    print(f"✗ version {version} (requires {required_version})")
+                if module is None:
+                    current_version = opentelemetry_version
+                else:
+                    current_version = getattr(module, "__version__", None)
+                if current_version == required_version:
+                    print(f"✓ (version {current_version})")
+                elif current_version:
+                    print(f"✗ version {current_version} (requires {required_version})")
                     all_imports_ok = False
                 else:
                     print(
