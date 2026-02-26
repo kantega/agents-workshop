@@ -12,6 +12,16 @@ from process_event_stream import process_event_stream
 discussion_rounds = 1
 load_dotenv()
 
+# EXERCISE: 
+# a) Try to get the author to write a poem you like by improving the task text.
+# b) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
+# c) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
+#   - add .with_request_info(agents=[critic])  # Only pause before critic speaks
+#     This will allow the human to provide feedback to the agents when the workflow requests it.
+#   - Provide feedback to the discussion and observe how the discussion changes.
+#
+# Just play around with the conversation. You can change the task to be anything you like.
+
 async def main_stream(task: str) -> None:
 
     client = AzureOpenAIResponsesClient()
@@ -68,13 +78,3 @@ if __name__ == "__main__":
     print("Starting team discussion...")
     task = "Write a 3-line poem about the ocean."
     asyncio.run(main_stream(task))
-
-# EXERCISE: 
-# a) Try to get the author to write a poem you like by improving the task text.
-# b) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
-# c) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
-#   - add .with_request_info(agents=[critic])  # Only pause before critic speaks
-#     This will allow the human to provide feedback to the agents when the workflow requests it.
-#   - Provide feedback to the discussion and observe how the discussion changes.
-#
-# Just play around with the conversation. You can change the task to be anything you like.

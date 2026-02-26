@@ -7,6 +7,9 @@ from duckduckgo_search import DDGS
 
 load_dotenv()
 
+# EXERCISE: write a real browsing tool to search for your name, company, or something else interesting.
+# Hint: you may use DuckDuckGo API that is free to use.
+
 # Define a tool that searches the web for information.
 # For simplicity, we will use a mock function here that returns a static string.
 @tool(approval_mode="never_require")
@@ -32,8 +35,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# EXERCISE: write a real browsing tool to search for your name, company, or something else interesting.
-# Hint: you may use DuckDuckGo API that is free to use.
 

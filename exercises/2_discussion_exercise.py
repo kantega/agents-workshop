@@ -12,6 +12,19 @@ from process_event_stream import process_event_stream
 rounds_of_discussion = 2
 load_dotenv()
 
+# EXERCISES:
+# a) Make the orchestrator follow the RULES of a good discussion moderator:
+#   "RULES:\n"
+#   "1. Rotate through ALL participants - do not favor any single participant\n"
+#   "2. Each participant should speak at least once before any participant speaks twice\n"
+#   "3. Continue for at least {rounds_of_discussion - 1} rounds before ending the discussion\n"
+#   "4. Do NOT select the same participant twice in a row"
+# b) Ask the team to solve the task: "Write code that calculates the pi number."
+# c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
+# d) Create a "critic" agent and add it to the discussion. The critic should:
+#       "Provide constructive feedback. "
+#       "Do not be too strict. Keep your answers somewhat short.",
+
 async def main_stream(task: str) -> None:
 
     client = AzureOpenAIResponsesClient()
@@ -53,16 +66,3 @@ if __name__ == "__main__":
     print("Starting team discussion...")
     task = "What is the answer to everything?"
     asyncio.run(main_stream(task))
-
-# EXERCISES:
-# a) Make the orchestrator follow the RULES of a good discussion moderator:
-#   "RULES:\n"
-#   "1. Rotate through ALL participants - do not favor any single participant\n"
-#   "2. Each participant should speak at least once before any participant speaks twice\n"
-#   "3. Continue for at least {rounds_of_discussion - 1} rounds before ending the discussion\n"
-#   "4. Do NOT select the same participant twice in a row"
-# b) Ask the team to solve the task: "Write code that calculates the pi number."
-# c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
-# d) Create a "critic" agent and add it to the discussion. The critic should:
-#       "Provide constructive feedback. "
-#       "Do not be too strict. Keep your answers somewhat short.",
