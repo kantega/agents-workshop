@@ -32,14 +32,14 @@ async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str
     responses: dict[str, AgentRequestInfoResponse] = {}
     if requests:
         for request_id, request in requests.items():
-            # Display pre-agent context for human input
-            print("\n" + "-" * 40)
-            print("INPUT REQUESTED")
-            print(
-                f"Agent {request.executor_id} just responded with: '{request.agent_response.text}'. "
-                "Please provide your feedback."
-            )
-            print("-" * 40)
+            # # Display pre-agent context for human input
+            # print("\n" + "-" * 40)
+            # print("INPUT REQUESTED")
+            # print(
+            #     f"Agent {request.executor_id} just responded with: '{request.agent_response.text}'. "
+            #     "Please provide your feedback."
+            # )
+            # print("-" * 40)
             if request.full_conversation:
                 print("Conversation context:")
                 recent = (

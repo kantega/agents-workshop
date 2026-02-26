@@ -74,6 +74,34 @@ AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-5-nano"
 
 - **Test at alt fungerer ved å kjøre `python test_environment.py`. Dette skriptet sjekker at alle nødvendige pakker er installert.**
 
+
+## 🎯 Øvelsesrekkefølge
+
+For å få mest mulig ut av workshoppen følger øvelsene en logisk progresjon fra enkle konsepter til mer avanserte multi-agent systemer. Anbefalt rekkefølge:
+
+### 1. 🌐 Web Browsing med verktøy
+**Fil:** `1_web_browsing_exercise.py`  
+**Konsepter:** Agent tools, funksjonskall, enkelt agent-system  
+**Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i Agent Framework.
+
+### 2. 💬 Agent-til-Agent diskusjon
+**Fil:** `2_discussion_exercise.py`  
+**Konsepter:** Multi-agent samtaler, Gruppe-chat i rekkefølge, termineringsvilkår  
+**Beskrivelse:** Opprett ditt første multi-agent system hvor to agenter (primary og critic) diskuterer og forbedrer løsninger sammen. 
+
+### 3. 👤 Interaktiv diskusjon med bruker
+**Fil:** `discussion_with_user_exercise.py`  
+**Konsepter:** requests, menneske-i-løkka, interaktive samtaler  
+**Beskrivelse:** Utvid agent-systemet til å inkludere menneskelig input. Lær hvordan du integrerer brukerinteraksjon i agent-arbeidsflyter.
+
+---
+
+> **💡 Tips:** Start med øvelse 1 og arbeid deg nedover. Hver øvelse bygger på konseptene fra de forrige!
+
+> Begynn gjerne på Oppgavene om du har kommet hit og vil starte på oppgavene.
+
+Videre følgere litt teori og noen praktiske eksempler
+
 ## Om Agentiske Systemer
 
 ### Hva er agentiske systemer?
@@ -128,7 +156,6 @@ Agentiske systemer er AI-systemer som består av flere autonome agenter som kan 
 | **Transparens** | Svart boks | Synlig diskusjon og resonnering |
 
 ### Om Agent Framework
-# Refactor this section ->
 
 Agent Framework er et rammeverk utviklet av Microsoft for å bygge agentiske AI-systemer. Det tilbyr:
 
@@ -147,69 +174,48 @@ Agent Framework er et rammeverk utviklet av Microsoft for å bygge agentiske AI-
 - Fleksibel arkitektur som kan tilpasses mange bruksområder
 
 
-Oppdatering februar 2026:
+> Oppdatering februar 2026:
 Større oppdatering av workshop med migrering til Agent Framework
 
-Oppdatering oktober 2025:
+> Oppdatering oktober 2025:
 AutoGen skal ikke utvikles videre (kun bugfix), siden Microsoft har lansert en ny plattform [Microsoft Agent Framework]("https://github.com/microsoft/agent-framework") som bygger videre på konseptene fra AutoGen og Semantic Kernel.
 
-### Agent Framework - Grunnleggende Konsepter
+### Agent Framework - Grunnleggende konsepter
 
 For å forstå hvordan Agent Framework fungerer, er det viktig å kjenne til de grunnleggende byggesteinene:
 
+AzureOpenAIResponsesClient
 
-#### Agenter (Agents)
+#### Agenter
 Agenter er de grunnleggende enhetene i Agent Framework som kan kommunisere og utføre oppgaver:
 
-**AssistantAgent:**
-- Standard AI-agent som bruker en språkmodell
-- Kan ha spesialiserte systemmeddelelser for å definere rolle og oppførsel
-- Kan utstyres med verktøy (tools) for utvidede funksjoner
-
-**UserProxyAgent - TODO: refaktor:** 
-- Representerer en menneskelig bruker i samtalen
-- Kan be om input fra brukeren eller fungere automatisk
-- Brukes for å integrere menneskelig vurdering i agent-arbeidsflyter
-
-**CodeExecutorAgent:**
-- Spesialisert agent for å kjøre kode
-- Kan utføre kode i isolerte miljøer (som Docker-containere)
-- Sikrer trygg eksekverering av generert kode
-
 #### Teams og kommunikasjonsmønstre
+
 Agent Framework organiserer agenter i team med definerte kommunikasjonsmønstre:
 
-**RoundRobinGroupChat:**
-- Agenter snakker i en forhåndsbestemt rekkefølge
-- Hver agent får mulighet til å respondere i tur
-- Enkelt å forstå og forutsigbart kommunikasjonsmønster
-
-**Selector-baserte team:**
-- Mer avanserte mønstre hvor en "selector" bestemmer hvem som skal snakke
-- Kan tilpasse kommunikasjonsflyt basert på kontekst
-
-#### Termineringsvilkår (Termination Conditions)
-Definerer når en samtale eller oppgave skal avsluttes:
-
-**TextMentionTermination:**
-- Stopper når en spesifikk tekst nevnes (f.eks. "APPROVE")
-- Nyttig for godkjenningsarbeidsflyter
-
-**MaxMessageTermination:**
-- Begrenser antall meldinger i en samtale
-- Forhindrer uendelige diskusjoner
-
-**Kombinerte vilkår:**
-- Kan kombinere flere termineringsvilkår med logiske operatorer (AND/OR)
+**Tur-basert:**
+```
+GroupChatBuilder(
+    participants=[author, critic],
+    orchestrator_agent=orchestrator
+    ....
+    # der orchestrator er instrueres til en tur-basert samtale.
+```
+Se også [forhåndsdefinert flyt](https://github.com/microsoft/agent-framework/blob/8e2cc4bedcf3ec0cf331f2f683d9884a0b72a7d7/python/samples/03-workflows/human-in-the-loop/agents_with_HITL.py#L201)
 
 #### Modellklienter (Model Clients)
 Agent Framework støtter forskjellige språkmodeller gjennom modellklienter:
-
 
 **AzureOpenAIChatCompletionClient:**
 - Kobler til Azure OpenAI-tjenester
 - Støtter modeller som GPT-5, GPT-5o, og GPT-5-nano
 - Krever API-nøkkel og endpoint-konfigurasjon
+
+**AzureOpenAIResponsesClient:**
+- Spesialisert klient for håndtering av strukturerte svar og responseparsing
+- Integreres med Azure OpenAI for å formatere agentutput i henhold til definerte skjemaer
+- Muliggjør typesikker responshandtering og validering i agent-arbeidsflyter
+
 
 #### Verktøy (Tools)
 Agenter kan utstyres med verktøy for å utføre spesifikke oppgaver:
@@ -252,10 +258,9 @@ print(result.messages[-1])  # Vis siste melding
 ```python
 # Kjør agent med sanntidsvisning
 stream = agent.run("Explain quantum computing", stream=True)
-await Console(stream)  # Vis meldinger mens de genereres
 ```
 
-#### Kjøring av Teams
+#### Kjøring av Team (Workflows)
 
 **team.run() - Team kjøring:**
 ```python
@@ -273,7 +278,7 @@ await process_event_stream(stream)  # Følg diskusjonen i sanntid
 ...
 ```
 
-#### Praktiske Eksempler
+#### Praktiske eksempler
 
 **Streaming med output:**
 
@@ -298,7 +303,7 @@ async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str
 ```
 
 **Med Menneskelig Interaksjon:**
-Verbos håndtering av requests i stream events for å gi feedback til workflow-resultater. 
+Håndtering av requests i stream events for å gi feedback til workflow-resultater. 
 
 ```python
 # Get human input to steer the agent
@@ -313,7 +318,7 @@ responses[request_id] = user_input
 
 #### Viktige Metoder og Konsepter
 
-**team**
+**team (Workflow)**
 - Er by default stateless og en kan kjøre en oppgave uten å tenke på resultatet fra forrige kjøring
 
 **Håndtering av Resultater:**
@@ -355,24 +360,3 @@ except Exception as e:
 - Kombinerer AI-effektivitet med menneskelig ekspertise
 - Fleksibel kontroll over automatiseringsgrad
 
-## 🎯 Øvelsesrekkefølge
-
-For å få mest mulig ut av workshoppen følger øvelsene en logisk progresjon fra enkle konsepter til mer avanserte multi-agent systemer. Anbefalt rekkefølge:
-
-### 1. 🌐 Web Browsing med verktøy
-**Fil:** `1_web_browsing_exercise.py`  
-**Konsepter:** Agent tools, funksjonskall, enkelt agent-system  
-**Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i Agent Framework.
-
-### 2. 💬 Agent-til-Agent diskusjon
-**Fil:** `2_discussion_exercise.py`  
-**Konsepter:** Multi-agent samtaler, Gruppe-chat i rekkefølge, termineringsvilkår  
-**Beskrivelse:** Opprett ditt første multi-agent system hvor to agenter (primary og critic) diskuterer og forbedrer løsninger sammen. 
-
-### 3. 👤 Interaktiv diskusjon med bruker
-**Fil:** `discussion_with_user_exercise.py`  
-**Konsepter:** requests, menneske-i-løkka, interaktive samtaler  
-**Beskrivelse:** Utvid agent-systemet til å inkludere menneskelig input. Lær hvordan du integrerer brukerinteraksjon i agent-arbeidsflyter.
-
----
-**💡 Tips:** Start med øvelse 1 og arbeid deg oppover. Hver øvelse bygger på konseptene fra de forrige!
