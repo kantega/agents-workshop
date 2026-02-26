@@ -27,8 +27,8 @@ async def main_stream(task: str) -> None:
         name="orchestrator",
         instructions=(
             "You are a discussion manager coordinating a team conversation between participants. "
-            "Your job is to select who speaks next.\n\n"
-        ),
+            "Your job is to select who speaks next.\n\n",
+        )
     )
 
     team = (
@@ -36,6 +36,7 @@ async def main_stream(task: str) -> None:
             participants=[primary],
             max_rounds=rounds_of_discussion,
             orchestrator_agent=orchestrator,
+            intermediate_outputs=True
         )
         .build()
     )
@@ -60,10 +61,10 @@ if __name__ == "__main__":
 #   "RULES:\n"
 #   "1. Rotate through ALL participants - do not favor any single participant\n"
 #   "2. Each participant should speak at least once before any participant speaks twice\n"
-#   "3. Continue for at least {rounds_of_discussion} rounds before ending the discussion\n"
+#   "3. Continue for at least {rounds_of_discussion - 1} rounds before ending the discussion\n"
 #   "4. Do NOT select the same participant twice in a row"
 # b) Ask the team to solve the task: "Write code that calculates the pi number."
 # c) Give the Coder space: remove the limitation of keeping it short. Observe the quality of the output.
 # d) Create a "critic" agent and add it to the discussion. The critic should:
-#       "Provide constructive feedback. Respond with 'APPROVE' to when your feedback is addressed. "
+#       "Provide constructive feedback. "
 #       "Do not be too strict. Keep your answers somewhat short.",

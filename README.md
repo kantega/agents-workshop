@@ -49,7 +49,7 @@ Cmd/Ctrl + Shift + P → Søk: Python Python: Select Interpreter → Conda: agen
 1. Naviger til https://github.com/kantega/agents-workshop
     - Eventuelt logg inn med din GitHub -bruker
 2. Trykk `.` (dot)
-3. `Cmd/Ctrl + Shift + D (Debug)` → Trykk på: `Continue working on ...`
+3. `Run and debug (Cmd/Ctrl + Shift + D)` → Trykk på: `Continue working on ...`
 4. Create New Codespace
     - Her kan du få en feilmelding, da det kan hende det ikke er knyttet en betaling til GitHub -konto 
 5. Velg 2 cores ...

@@ -2,7 +2,7 @@ import asyncio
 import sys
 from pathlib import Path
 
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.azure import AzureOpenAIResponsesClient
 from agent_framework.orchestrations import GroupChatBuilder
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ load_dotenv()
 
 async def main_stream(task: str) -> None:
 
-    client = AzureOpenAIChatClient()
+    client = AzureOpenAIResponsesClient()
 
     # Create the author agent.
     author = client.as_agent(
@@ -39,7 +39,7 @@ async def main_stream(task: str) -> None:
             "RULES:\n"
             "1. Rotate through ALL participants - do not favor any single participant\n"
             "2. Each participant should speak at least once before any participant speaks twice\n"
-        f"3. Continue for at least {discussion_rounds - 1} rounds before ending the discussion\n"
+            f"3. Continue for at least {discussion_rounds-1} rounds before ending the discussion\n"
             "4. Do NOT select the same participant twice in a row"
         )
     )
@@ -48,7 +48,9 @@ async def main_stream(task: str) -> None:
     team = (
         GroupChatBuilder(
             participants=[author, critic],
-            orchestrator_agent=orchestrator)
+            orchestrator_agent=orchestrator,
+            intermediate_outputs=True
+         )
         .with_max_rounds(discussion_rounds)  # Limit the number of rounds the discussion can go on for
         .build()
     )

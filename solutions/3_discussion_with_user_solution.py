@@ -48,13 +48,16 @@ async def main_stream(task: str) -> None:
     team = (
         GroupChatBuilder(
             participants=[author, critic],
-            orchestrator_agent=orchestrator)
+            orchestrator_agent=orchestrator,
+            intermediate_outputs=True
+         )
         .with_max_rounds(discussion_rounds)  # Limit the number of rounds the discussion can go on for
         .with_request_info(agents=[critic])  # Only pause before critic speaks
         .build()
     )
 
     stream = team.run(task, stream=True)
+
     pending_responses = await process_event_stream(stream)
     while pending_responses is not None:
         # Run the team until there is no more human feedback to provide,
@@ -70,8 +73,8 @@ if __name__ == "__main__":
 
 # EXERCISE: 
 # a) Try to get the author to write a poem you like by improving the task text.
-# c) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
-# d) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
+# b) If you like you can increase the discussion_rounds to give the agents more space to improve the poem.
+# c) Put yourself in the team and give feedback to the author to steer the poem in a direction you like:
 #   - add .with_request_info(agents=[critic])  # Only pause before critic speaks
 #     This will allow the human to provide feedback to the agents when the workflow requests it.
 #   - Provide feedback to the discussion and observe how the discussion changes.
