@@ -228,20 +228,16 @@ async def web_search(query: str) -> str:
 ```
 
 #### Arbeidsflyt og Eksekverering
-AutoGen bruker asynkron programmering for effektiv håndtering:
+Agent Framework støtter asynkron programmering for effektiv håndtering:
 
 **Async/Await:**
 - Alle Agent Framework-operasjoner er asynkrone
 - Tillater parallell prosessering og bedre ressursutnyttelse
 - Krever `asyncio.run()` for å kjøre hovedfunksjoner
 
-**Streaming:**
-- Sanntidsvisning av agent-samtaler
-- `Console` UI for å følge diskusjoner mens de pågår
-
 ### Hvordan kjøre Agenter og Teams
 
-AutoGen tilbyr flere metoder for å kjøre agenter og teams, avhengig av om du vil ha sanntidsvisning eller bare resultatet:
+Agent Framework har flere metoder for å kjøre agenter og teams, avhengig av om du vil ha sanntidsvisning eller bare resultatet:
 
 #### Kjøring av Enkeltlagenter
 
@@ -269,61 +265,59 @@ for message in result.messages:
     print(f"{message.source}: {message.content}")
 ```
 
-**team.run_stream() - Team streaming:**
+**team.run("stream=True) team streaming:**
 ```python
 # Kjør team med sanntidsvisning av diskusjonen
-stream = team.run_stream(task="Design a database schema for an e-commerce system")
-await Console(stream)  # Følg diskusjonen i sanntid
+stream = team.run(task="Design a database schema for an e-commerce system", stream=True)
+await process_event_stream(stream)  # Følg diskusjonen i sanntid
+...
 ```
 
 #### Praktiske Eksempler
 
-**Enkelt Agent-Team:**
+**Streaming med output:**
+
 ```python
-import asyncio
-from autogen_agentchat.agents import AssistantAgent
-from autogen_agentchat.teams import RoundRobinGroupChat
-from autogen_agentchat.conditions import MaxMessageTermination
-from autogen_agentchat.ui import Console
+# Slå på intermediate_outputs for team
+team = (
+    GroupChatBuilder(
+        ...
+        intermediate_outputs=True
+    ) ...
 
-async def main():
-    # Opprett agenter
-    coder = AssistantAgent("coder", model_client=model_client)
-    reviewer = AssistantAgent("reviewer", model_client=model_client)
-    
-    # Opprett team
-    team = RoundRobinGroupChat(
-        participants=[coder, reviewer],
-        termination_condition=MaxMessageTermination(6)
-    )
-    
-    # Kjør oppgave
-    task = "Write and review a Python function to sort a list"
-    await Console(team.run_stream(task=task))
+# kjør team workflow
+team.run("Oppgave", stream=True)
 
-# Kjør hovedfunksjonen
-asyncio.run(main())
+...
+# kombinert med process_event_stream.py:
+async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str, AgentRequestInfoResponse] | None:
+    async for event in stream:
+        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+            print(update.text, end="", flush=True) # print hvert token som output fra siste agent.
+    ...
 ```
 
 **Med Menneskelig Interaksjon:**
 Verbos håndtering av requests i stream events for å gi feedback til workflow-resultater. 
 
 ```python
-# Todo
+# Get human input to steer the agent
+user_input = input(f"Feedback for {request.executor_id} (or 'skip' to approve): ")
+if user_input.lower() == "skip":
+    user_input = AgentRequestInfoResponse.approve()
+else:
+    user_input = AgentRequestInfoResponse.from_strings([user_input])
+
+responses[request_id] = user_input  
 ```
 
 #### Viktige Metoder og Konsepter
 
-**team.reset():**
-- Nullstiller teamets tilstand før ny oppgave
-- Viktig å kalle mellom forskjellige oppgaver
-
-```python
-await team.reset()  # Nullstill før ny oppgave
-result = await team.run(task="New task here")
-```
+**team**
+- Er by default stateless og en kan kjøre en oppgave uten å tenke på resultatet fra forrige kjøring
 
 **Håndtering av Resultater:**
+
 ```python
 # Få tilgang til alle meldinger
 result = await team.run(task="Some task")
@@ -343,18 +337,6 @@ try:
 except Exception as e:
     print(f"Feil under kjøring: {e}")
 ```
-
-#### Sikkerhet og Isolasjon
-AutoGen har innebygde sikkerhetsfunksjoner:
-
-**Docker-basert kodeeksekverering:**
-- Isolerer kodekjøring fra hovedsystemet
-- Forhindrer skadelig kode fra å påvirke vertsmaskinen
-- Automatisk opprydding av ressurser
-
-**Kontrollerte miljøer:**
-- Definerte arbeidsmapper for hver oppgave
-- Begrenset tilgang til systemressurser
 
 ### Arkitekturmønstre i Agent Framework
 
@@ -377,25 +359,20 @@ AutoGen har innebygde sikkerhetsfunksjoner:
 
 For å få mest mulig ut av workshoppen følger øvelsene en logisk progresjon fra enkle konsepter til mer avanserte multi-agent systemer. Anbefalt rekkefølge:
 
-### 1. 🌐 Web Browsing med Verktøy
-**Fil:** `web_browsing_exercise.py`  
+### 1. 🌐 Web Browsing med verktøy
+**Fil:** `1_web_browsing_exercise.py`  
 **Konsepter:** Agent tools, funksjonskall, enkelt agent-system  
 **Beskrivelse:** Lær hvordan du gir agenter tilgang til eksterne verktøy som web-søk. Øvelsen viser hvordan du definerer og bruker custom tools i Agent Framework.
 
-### 2. 💬 Agent-til-Agent Diskusjon  
-**Fil:** `discussion_exercise.py`  
-**Konsepter:** Multi-agent samtaler, RoundRobinGroupChat, termineringsvilkår  
-**Beskrivelse:** Opprett ditt første multi-agent system hvor to agenter (primary og critic) diskuterer og forbedrer løsninger sammen. Introduserer peer review-mønsteret.
+### 2. 💬 Agent-til-Agent diskusjon
+**Fil:** `2_discussion_exercise.py`  
+**Konsepter:** Multi-agent samtaler, Gruppe-chat i rekkefølge, termineringsvilkår  
+**Beskrivelse:** Opprett ditt første multi-agent system hvor to agenter (primary og critic) diskuterer og forbedrer løsninger sammen. 
 
-### 3. 👤 Interaktiv Diskusjon med Bruker
+### 3. 👤 Interaktiv diskusjon med bruker
 **Fil:** `discussion_with_user_exercise.py`  
-**Konsepter:** UserProxyAgent, menneske-i-løkka, interaktive samtaler  
+**Konsepter:** requests, menneske-i-løkka, interaktive samtaler  
 **Beskrivelse:** Utvid agent-systemet til å inkludere menneskelig input. Lær hvordan du integrerer brukerinteraksjon i agent-arbeidsflyter.
-
-### 4. 🔧 Kodegenerering med Utførelse
-**Fil:** `code_gen_2_agents.py`  
-**Konsepter:** CodeExecutorAgent, Docker-isolasjon, kode-generering og testing  
-**Beskrivelse:** Avansert øvelse som kombinerer kodegenerering og -utførelse. En agent skriver kode, en annen kjører den i et sikkert Docker-miljø.
 
 ---
 **💡 Tips:** Start med øvelse 1 og arbeid deg oppover. Hver øvelse bygger på konseptene fra de forrige!
