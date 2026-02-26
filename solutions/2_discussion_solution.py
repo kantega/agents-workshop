@@ -49,7 +49,6 @@ async def main_stream(task: str) -> None:
         GroupChatBuilder(
             participants=[primary, critic],
             orchestrator_agent=orchestrator,
-            intermediate_outputs=True
         )
         .with_max_rounds(rounds_of_discussion)  # Limit the number of rounds the discussion can go on for
         .build()

@@ -27,16 +27,14 @@ async def main_stream(task: str) -> None:
         name="orchestrator",
         instructions=(
             "You are a discussion manager coordinating a team conversation between participants. "
-            "Your job is to select who speaks next.\n\n",
+            "Your job is to select who speaks next.\n\n"),
         )
-    )
 
     team = (
         GroupChatBuilder(
             participants=[primary],
             max_rounds=rounds_of_discussion,
-            orchestrator_agent=orchestrator,
-            intermediate_outputs=True
+            orchestrator_agent=orchestrator
         )
         .build()
     )
