@@ -1,6 +1,6 @@
 # Core dependencies for autogen exercises and examples
 python-dotenv>=1.0.0
-duckduckgo-search==8.1.1
+ddgs==9.10.0
 agent-framework[azure]==1.0.0rc1
 azure-identity==1.25.2
 opentelemetry-semantic-conventions-ai==0.4.13

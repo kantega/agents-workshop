@@ -2,8 +2,8 @@ import asyncio
 
 from agent_framework import tool
 from agent_framework.azure import AzureOpenAIChatClient
+from ddgs import DDGS
 from dotenv import load_dotenv
-from duckduckgo_search import DDGS
 
 load_dotenv()
 
